@@ -1,0 +1,19 @@
+{
+  "name": "@banno/polymer-rename",
+  "version": "1.0.0",
+  "description": "Rename polymer template databinding expressions and event functions with closure-compiler",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "Polymer",
+    "google-closure-compiler"
+  ],
+  "author": "Chad Killingsworth <chadkillingsworth@gmail.com>",
+  "license": "Apache-2.0",
+  "dependencies": {
+    "parse5": "^2.1.5",
+    "tree-walk": "^0.4.0"
+  }
+}
