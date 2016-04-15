@@ -10,7 +10,7 @@
     "Polymer",
     "google-closure-compiler"
   ],
-  "author": "Chad Killingsworth <chadkillingsworth@gmail.com>",
+  "author": "Chad Killingsworth <chad.killingsworth@banno.com>",
   "license": "Apache-2.0",
   "dependencies": {
     "parse5": "^2.1.5",
