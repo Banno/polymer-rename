@@ -12,6 +12,14 @@
   ],
   "author": "Chad Killingsworth <chad.killingsworth@banno.com>",
   "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Banno/polymer-rename.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Banno/polymer-rename/issues"
+  },
+  "homepage": "https://github.com/Banno/polymer-rename#readme",
   "dependencies": {
     "parse5": "^2.1.5",
     "tree-walk": "github:chadkillingsworth/tree-walk#add-walk"
