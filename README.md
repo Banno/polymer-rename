@@ -60,7 +60,7 @@ polymerRenameProperty(75, 79, this.b);
 polymerRenameProperty(94, 102, this.c);
 polymerRenameProperty(144, 153, this.d);
 for (let e = 0; e < this.d.length; e++) {
-  let f = this.addresses[e];
+  let f = this.d[e];
   polymerRenameDomRepeatProperty(171, 182, polymerDomRepeatItem(f), f.g);
   polymerRenameDomRepeatProperty(203, 212, polymerDomRepeatItem(f), f.h);
   polymerRenameDomRepeatProperty(218, 228, polymerDomRepeatItem(f), f.i);
