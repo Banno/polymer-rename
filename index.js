@@ -20,7 +20,7 @@ function filterNodes(elem, index, arr) {
   return false;
 }
 
-function polymerRename(polymerTemplate) {
+function extractDataBindingExpressions(polymerTemplate) {
   let document = parse5.parse(polymerTemplate, {locationInfo: true});
   let polymerElements = [];
   domWalker.preorder(document, (value, key, parent) => {
@@ -49,7 +49,7 @@ function polymerRename(polymerTemplate) {
     output.push('}).call(/** @type {' + elem.typeName + '} */ (document.createElement("' + elem.tagName + '")))\n');
   }
 
-  console.log(output.join('\n'));
+  return output.join('\n');
 }
 
-module.exports = polymerRename;
+module.exports = extractDataBindingExpressions;
