@@ -24,9 +24,9 @@ polymerRename.property = function(start, end, prop) {}
 /**
  * @param {number} start
  * @param {number} end
- * @param {!Function} prop
+ * @param {EventListener|function(!Event):(boolean|undefined)} listener
  */
-polymerRename.eventListener = function(start, end, prop) {};
+polymerRename.eventListener = function(start, end, listener) {};
 
 /**
  * @param {*} item
