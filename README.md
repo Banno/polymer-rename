@@ -33,16 +33,16 @@ separate file. This file can then be used to update the original HTML template w
 
 ```js
 (/** @this {FooBarElement} */ function() {
-polymerRenameMethod(64, 74, this.formatName);
-polymerRenameProperty(75, 79, this.name);
-polymerRenameProperty(94, 102, this.employer);
-polymerRenameProperty(144, 153, this.addresses);
+polymerRename.method(64, 74, this.formatName);
+polymerRename.property(75, 79, this.name);
+polymerRename.property(94, 102, this.employer);
+polymerRename.property(144, 153, this.addresses);
 for (let index = 0; index < this.addresses.length; index++) {
   let item = this.addresses[index];
-  polymerRenameDomRepeatProperty(171, 182, polymerDomRepeatItem(item), item.street);
-  polymerRenameDomRepeatProperty(203, 212, polymerDomRepeatItem(item), item.city);
-  polymerRenameDomRepeatProperty(218, 228, polymerDomRepeatItem(item), item.state);
-  polymerRenameDomRepeatProperty(233, 241, polymerDomRepeatItem(item), item.zip);
+  polymerRename.domRepeatProperty(171, 182, polymerRename.domRepeatItem(item), item.street);
+  polymerRename.domRepeatProperty(203, 212, polymerRename.domRepeatItem(item), item.city);
+  polymerRename.domRepeatProperty(218, 228, polymerRename.domRepeatItem(item), item.state);
+  polymerRename.domRepeatProperty(233, 241, polymerRename.domRepeatItem(item), item.zip);
 }
 }).call(/** @type {FooBarElement} */ (document.createElement("foo-bar")))
 ```
@@ -55,16 +55,16 @@ original expression with the now renamed properties and methods.
 
 ```js
 (function() {
-polymerRenameMethod(64, 74, this.a);
-polymerRenameProperty(75, 79, this.b);
-polymerRenameProperty(94, 102, this.c);
-polymerRenameProperty(144, 153, this.d);
+polymerRename.method(64, 74, this.a);
+polymerRename.property(75, 79, this.b);
+polymerRename.property(94, 102, this.c);
+polymerRename.property(144, 153, this.d);
 for (let e = 0; e < this.d.length; e++) {
   let f = this.d[e];
-  polymerRenameDomRepeatProperty(171, 182, polymerDomRepeatItem(f), f.g);
-  polymerRenameDomRepeatProperty(203, 212, polymerDomRepeatItem(f), f.h);
-  polymerRenameDomRepeatProperty(218, 228, polymerDomRepeatItem(f), f.i);
-  polymerRenameDomRepeatProperty(233, 241, polymerDomRepeatItem(f), f.j);
+  polymerRename.domRepeatProperty(171, 182, polymerRename.domRepeatItem(f), f.g);
+  polymerRename.domRepeatProperty(203, 212, polymerRename.domRepeatItem(f), f.h);
+  polymerRename.domRepeatProperty(218, 228, polymerRename.domRepeatItem(f), f.i);
+  polymerRename.domRepeatProperty(233, 241, polymerRename.domRepeatItem(f), f.j);
 }
 }).call(document.createElement("foo-bar"))
 ```

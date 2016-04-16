@@ -4,32 +4,34 @@
  * @externs
  */
 
-/**
- * @param {number} start
- * @param {number} end
- * @param {!Function} prop
- */
-function polymerRenameMethod(start, end, prop) {}
-
-/**
- * @param {number} start
- * @param {number} end
- * @param {*} prop
- */
-function polymerRenameProperty(start, end, prop) {}
+/** @const */
+var polymerRename = {};
 
 /**
  * @param {number} start
  * @param {number} end
  * @param {!Function} prop
  */
-function polymerRenameListener(start, end, prop) {}
+polymerRename.method = function(start, end, prop) {}
+
+/**
+ * @param {number} start
+ * @param {number} end
+ * @param {*} prop
+ */
+polymerRename.property = function(start, end, prop) {}
+
+/**
+ * @param {number} start
+ * @param {number} end
+ * @param {!Function} prop
+ */
+polymerRename.eventListener = function(start, end, prop) {};
 
 /**
  * @param {*} item
  */
-function polymerDomRepeatItem(item) {}
-
+polymerRename.domRepeatItem = function(item) {}
 
 /**
  * @param {number} start
@@ -37,4 +39,4 @@ function polymerDomRepeatItem(item) {}
  * @param {*} item
  * @param {*} prop
  */
-function polymerRenameDomRepeatProperty(start, end, item, prop) {}
+polymerRename.domRepeatProperty = function(start, end, item, prop) {};
