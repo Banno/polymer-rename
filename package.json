@@ -21,6 +21,7 @@
   },
   "homepage": "https://github.com/Banno/polymer-rename#readme",
   "dependencies": {
+    "acorn": "^3.0.4",
     "gulp-util": "^3.0.7",
     "parse5": "^2.1.5",
     "tree-walk": "github:chadkillingsworth/tree-walk#add-walk"
