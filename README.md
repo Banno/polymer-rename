@@ -12,9 +12,95 @@ templates to be consistently renamed and type checked along with the main source
 Using the code-splitting functionality of the compiler, the generated renameable javascript can be directed to a
 separate file. This file can then be used to update the original HTML template with the now-renamed property references.
 
-## Example
+## Usage
 
-### Polymer Element HTML
+This project functions in two phases: pre and post closure-compiler compilation. Each phase has its own gulp plugin
+or can be used as native JS functions.
+
+### Pre-compilation: Extracting Data-binding Expressions
+
+**Gulp**
+
+```js
+const polymerRename = require('@banno/polymer-rename');
+const rename = require('gulp-rename');
+
+gulp.task('extract-data-binding-expressions', function() {
+  gulp.src('/src/components/**/*.html') // Usually this will be the vulcanized file
+      .pipe(polymerRename.extract())
+      .pipe(rename(function (filePath) {
+        filePath.basename += '.template';
+      }))
+      .pipe(gulp.dest('./build'));
+});
+```
+
+**JS Functions**
+
+```js
+const extractExpressions = require('@banno/polymer-rename/lib/extract-expressions');
+const fs = require('fs');
+
+let expressions = extractExpressions(fs.readFileSync('/src/components/foo-bar.html', {encoding: 'utf8'}));
+console.log(expressions);
+```
+
+### Example Compilation
+
+Closure-compiler's module flags allow the output to be split into separate files.
+
+```js
+let closureCompiler = require('google-closure-compiler');
+
+gulp.task('compile-js', function() {
+  gulp.src(['./src/js/app.js', './build/foo-bar.template.js'])
+      .pipe(closureCompiler({
+        compilation_level: 'ADVANCED',
+        warning_level: 'VERBOSE',
+        module: [
+          'app:1',
+          'foo-bar.template:1:app'
+        ],
+        externs: [
+          require.resolve('google-closure-compiler/contrib/externs/polymer-1.0.js'), //someday this will be true :)
+          require.resolve('@banno/polymer-rename/polymer-rename-externs.js')
+        ]
+      })
+      .pipe(gulp.dest('./build'));
+});
+```
+
+### Post-compilation: Find the Renamed Properties And Update the Template
+
+**Gulp**
+
+```js
+const polymerRename = require('@banno/polymer-rename');
+
+gulp.task('update-html-template', function() {
+  gulp.src('./src/components/foo-bar.html') // Usually this will be the vulcanized file
+      .pipe(polymerRename.replace('./build/foo-bar.template.js'))
+      .pipe(gulp.dest('./dist/components'));
+});
+```
+
+**JS Functions**
+
+```js
+const replaceExpressions = require('@banno/polymer-rename/lib/replace-expressions');
+const fs = require('fs');
+
+let originalTemplate = fs.readFileSync('./src/components/foo-bar.html', {encoding: 'utf8'});
+let renamedExpressions = fs.readFileSync('./build/foo-bar.template.js', {encoding: 'utf8'});
+
+let updatedTemplate = replaceExpressions(originalTemplate, renamedExpressions);
+console.log(updatedTemplate);
+```
+
+## How This Project Works
+
+Giving the following polymer template, the first phase of the project will extract the
+data-binding expressions and create a valid JS file:
 
 ```html
 <dom-module id="foo-bar" assetpath="/">
@@ -29,7 +115,7 @@ separate file. This file can then be used to update the original HTML template w
 </dom-module>
 ```
 
-### Generated JavaScript From Extracted Data-Bound Properties
+Generated JavaScript from the extracted data-bound properties:
 
 ```js
 (/** @this {FooBarElement} */ function() {
@@ -46,12 +132,11 @@ for (let index = 0; index < this.addresses.length; index++) {
 }
 }).call(/** @type {FooBarElement} */ (document.createElement("foo-bar")))
 ```
-
 Each of the special function calls is [defined as an extern](polymer-rename-externs.js). Each call takes a pair of
 indexes where the expression resides in the original file. After compilation, these indexes are used to replace the
 original expression with the now renamed properties and methods.
 
-### Generated JavaScript After Compilation
+The compiler consumes the JS file and outputs the renamed expressions:
 
 ```js
 (function() {
@@ -68,6 +153,8 @@ for (let e = 0; e < this.d.length; e++) {
 }
 }).call(document.createElement("foo-bar"))
 ```
+
+The provided indexes are now used to update the original Polymer template.
 
 ## Limitations of This Project
 
