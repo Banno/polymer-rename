@@ -10,6 +10,12 @@
     "Polymer",
     "google-closure-compiler"
   ],
+  "files": [
+    "index.js",
+    "polymer-rename-externs.js",
+    "lib",
+    "test"
+  ],
   "author": "Chad Killingsworth <chad.killingsworth@banno.com>",
   "license": "Apache-2.0",
   "repository": {
@@ -25,5 +31,9 @@
     "gulp-util": "^3.0.7",
     "parse5": "^2.1.5",
     "tree-walk": "github:chadkillingsworth/tree-walk#add-walk"
+  },
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "mocha": "^2.4.5"
   }
 }
