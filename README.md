@@ -1,5 +1,6 @@
 # @banno/polymer-rename
 [![Build Status](https://travis-ci.org/Banno/polymer-rename.svg?branch=master)](https://travis-ci.org/Banno/polymer-rename)
+[![npm version](https://badge.fury.io/js/polymer-rename.svg)](https://badge.fury.io/js/polymer-rename)
 
 [Closure-compiler](https://developers.google.com/closure/compiler) with `ADVANCED` optimizations, offers the powerful
 ability to rename properties. However, it can only safely be used on code bases which follow it's
