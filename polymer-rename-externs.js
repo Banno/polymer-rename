@@ -19,7 +19,7 @@ polymerRename.method = function(start, end, prop) {}
  * @param {number} end
  * @param {*} prop
  */
-polymerRename.property = function(start, end, prop) {}
+polymerRename.symbol = function(start, end, prop) {}
 
 /**
  * @param {number} start
@@ -29,14 +29,9 @@ polymerRename.property = function(start, end, prop) {}
 polymerRename.eventListener = function(start, end, listener) {};
 
 /**
- * @param {*} item
- */
-polymerRename.domRepeatItem = function(item) {}
-
-/**
  * @param {number} start
  * @param {number} end
- * @param {*} item
+ * @param {string} prefix
  * @param {*} prop
  */
-polymerRename.domRepeatProperty = function(start, end, item, prop) {};
+polymerRename.domRepeatSymbol = function(start, end, prefix, prop) {};
