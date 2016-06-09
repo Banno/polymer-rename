@@ -11,7 +11,7 @@ references. While it's possible to quote or export all of the properties referen
 significantly decreases both the final compression as well as the type checking ability of the compiler.
 
 This project offers an alternative approach. Prior to compilation with Closure-compiler, the Polymer template html
-is parsed any data binding expressions are extracted. These extracted expressions are then output in an alternative
+is parsed and any data binding expressions are extracted. These extracted expressions are then output in an alternative
 form as javascript. This extracted javascript is never intended to be actually executed, but it is provided to
 Closure-compiler during compilation. The compiler can then safely rename references and thus the need to export or
 quote properties used in data-binding is eliminated. In addition, considerable type checking is enabled for data-binding
@@ -120,10 +120,10 @@ data-binding expressions and create a valid JS file:
 ```html
 <dom-module id="foo-bar" assetpath="/">
   <template>
-    <div>[[formatName(name)]]
-    <div>[[employer]]
+    <div on-click="nameClicked">[[formatName(name)]]</div>
+    <div>[[employer]]</div>
     <template is="dom-repeat" items="[[addresses]]">
-      <div>[[item.street]</div>
+      <div>[[item.street]]</div>
       <div>[[item.city]], [[item.state]] [[item.zip]]</div>
     </template>
   </template>
@@ -134,16 +134,17 @@ Generated JavaScript from the extracted data-bound properties:
 
 ```js
 (/** @this {FooBarElement} */ function() {
-polymerRename.method(64, 74, this.formatName);
-polymerRename.property(75, 79, this.name);
-polymerRename.property(94, 102, this.employer);
-polymerRename.property(144, 153, this.addresses);
+polymerRename.eventListener(72, 83, this.nameClicked);
+polymerRename.method(87, 97, this.formatName);
+polymerRename.symbol(98, 102, this.name);
+polymerRename.symbol(123, 131, this.employer);
+polymerRename.symbol(179, 188, this.addresses);
 for (let index = 0; index < this.addresses.length; index++) {
   let item = this.addresses[index];
-  polymerRename.domRepeatProperty(171, 182, polymerRename.domRepeatItem(item), item.street);
-  polymerRename.domRepeatProperty(203, 212, polymerRename.domRepeatItem(item), item.city);
-  polymerRename.domRepeatProperty(218, 228, polymerRename.domRepeatItem(item), item.state);
-  polymerRename.domRepeatProperty(233, 241, polymerRename.domRepeatItem(item), item.zip);
+  polymerRename.domRepeatSymbol(206, 217, 'item', item.street);
+  polymerRename.domRepeatSymbol(239, 248, 'item', item.city);
+  polymerRename.domRepeatSymbol(254, 264, 'item', item.state);
+  polymerRename.domRepeatSymbol(269, 277, 'item', item.zip);
 }
 }).call(/** @type {FooBarElement} */ (document.createElement("foo-bar")))
 ```
@@ -155,16 +156,17 @@ The compiler consumes the JS file and outputs the renamed expressions:
 
 ```js
 (function() {
-polymerRename.method(64, 74, this.a);
-polymerRename.property(75, 79, this.b);
-polymerRename.property(94, 102, this.c);
-polymerRename.property(144, 153, this.d);
-for (let e = 0; e < this.d.length; e++) {
-  let f = this.d[e];
-  polymerRename.domRepeatProperty(171, 182, polymerRename.domRepeatItem(f), f.g);
-  polymerRename.domRepeatProperty(203, 212, polymerRename.domRepeatItem(f), f.h);
-  polymerRename.domRepeatProperty(218, 228, polymerRename.domRepeatItem(f), f.i);
-  polymerRename.domRepeatProperty(233, 241, polymerRename.domRepeatItem(f), f.j);
+polymerRename.eventListener(72, 83, this.a);
+polymerRename.method(87, 97, this.b);
+polymerRename.symbol(98, 102, this.c);
+polymerRename.symbol(123, 131, this.d);
+polymerRename.symbol(179, 188, this.e);
+for (let a = 0; a < this.e.length; a++) {
+  let b = this.e[a];
+  polymerRename.domRepeatSymbol(206, 217, 'item', b.f);
+  polymerRename.domRepeatSymbol(239, 248, 'item', b.g);
+  polymerRename.domRepeatSymbol(254, 264, 'item', b.h);
+  polymerRename.domRepeatSymbol(269, 277, 'item', b.i);
 }
 }).call(document.createElement("foo-bar"))
 ```
