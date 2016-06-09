@@ -12,5 +12,8 @@ notifications:
   hipchat:
     rooms:
       secure: Rsv9n1UCAhtYrrA/d3USPYFLxh78c6kGEbbx/c1thZdsbNCXT4mYnzKmWBSfoEWMTSkt50cRD4r++MGencAyEoPuWCrJNhmen1qzBcEBXeo2EjakH0UOmjvu268c0/TgdMjeNU6y1bG40+D3TXj2saNbXJdXS+yryDJHfaqdhD1SCauFw58b+Z01rQ1UxviBY6CpUI5ojt35OtEHYlXXHKVyGEXgBbJk2STn4+l9HMXlPFcDKVqA3Ob4B/XefkmEYXJbKtusdTx0h8Nh6ak9gWF042j3GM2GCNmBtLYPO7B5suJmSMRU2hE3UNKP366fZrFks3iIhKV8AmzOaMQScxkctDtBe4Yvs2QB5asv3axdNpiJ9W1C8u1+JBTs1o+MD72ZFpkyojzt1PW/vW3v3ibZ/e+Z2/dhcaeFHDUDkncO8D9MRFcEnjKnJOONWlPjlPIxXrooafv0k2Tz5upkvgpyE6jwnQLlk3tnfZGQ5/ONd7DGFnBF1HX5ZN7aLsDT3Zu6DXtQKMAMQnsQQIlA0+bZ3ocBzHc+MsrHyJRt/aifC17M8vilHj6YAtytNzoj1aiXd2x5cfTJ3qqpALaEooisE9qrstnQc1UGde2hyrs7c/9Q6A2flV33x/EmKEX2WhdkeI09SZnDfNwqEpBx9a6DFyVmwtCHAls+LwLMJo0=
-    on_success: always
+    on_success: change
     on_failure: always
+    template:
+    - '%{repository}#%{build_number} (%{branch} - %{commit} : %{author}): %{message} (<a href="%{build_url}">Details</a>/<a href="%{compare_url}">Change view</a>)'
+    format: html
