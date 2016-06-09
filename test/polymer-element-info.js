@@ -337,7 +337,7 @@ describe('Polymer Element Info', function() {
     it('nested repeats', function () {
       let element = getPolymerElementInfo('foo-bar',
           `<template is="dom-repeat" items="{{bar}}" as="outerItem" index-as="outerIndex">
-            [[middleItem]]
+            {{innerItem}}
             <template is="dom-repeat" items="{{outerItem}}">
               <template is="dom-repeat" items="{{item}}" as="innerItem" index-as="innerIndex">
                 [[outerItem.length]] [[outerIndex]] [[item.length]] [[index]] [[innerItem]] [[innerIndex]] [[foobar]]
@@ -373,13 +373,13 @@ describe('Polymer Element Info', function() {
       expect(outer.renameables[1].start).to.be.equal(start);
       expect(outer.renameables[1].end).to.be.equal(end);
 
-      // This reference to "middleItem" should be recognized as a property
+      // This reference to "innerItem" should be recognized as a property
       // of the element because it's dom-repeat definition is not in scope
       expect(outer.renameables[2]).to.be.an.instanceof(symbolExpr);
-      expect(outer.renameables[2].symbol).to.be.equal('middleItem');
+      expect(outer.renameables[2].symbol).to.be.equal('innerItem');
       expect(outer.renameables[2].isElementProperty).to.be.true;
-      start = element.documentHtmlString.indexOf('[[middleItem]]\n') + 2;
-      end = start + 'middleItem'.length;
+      start = element.documentHtmlString.indexOf('{{innerItem}}\n') + 2;
+      end = start + 'innerItem'.length;
       expect(outer.renameables[2].start).to.be.equal(start);
       expect(outer.renameables[2].end).to.be.equal(end);
 
