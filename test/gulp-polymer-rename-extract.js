@@ -12,7 +12,8 @@ describe('gulp-polymer-renamer - extract phase', function() {
   <template>
     <div data-foo="{{bar}}"></div>
   </template>
-</dom-module>`)
+</dom-module>`),
+        path: './foo-bar.html'
       });
 
       // Create a extractExpressions plugin stream
