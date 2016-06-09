@@ -1,4 +1,5 @@
 # @banno/polymer-rename
+[![Build Status](https://travis-ci.org/Banno/polymer-rename.svg?branch=master)]
 
 When using [Closure-compiler](https://developers.google.com/closure/compiler) with `ADVANCED` optimizations,
 object properties are renamed. This behavior will break property references in Polymer template data-bound
