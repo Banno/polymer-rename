@@ -1,17 +1,20 @@
 # @banno/polymer-rename
 [![Build Status](https://travis-ci.org/Banno/polymer-rename.svg?branch=master)](https://travis-ci.org/Banno/polymer-rename)
 
-When using [Closure-compiler](https://developers.google.com/closure/compiler) with `ADVANCED` optimizations,
-object properties are renamed. This behavior will break property references in Polymer template data-bound
-expressions and events.
+[Closure-compiler](https://developers.google.com/closure/compiler) with `ADVANCED` optimizations, offers the powerful
+ability to rename properties. However, it can only safely be used on code bases which follow it's
+[required conventions](https://developers.google.com/closure/compiler/docs/limitations).
+With the introduction of polymer templates, data binding expressions become external uses of code which the compiler
+must be made aware of or optimizations such as dead-code elimination and property renaming will break the template
+references. While it's possible to quote or export all of the properties referenced from polymer templates, that action
+significantly decreases both the final compression as well as the type checking ability of the compiler.
 
-This project parses Polymer element HTML, extracts the renameable expressions and property references and creates
-a valid JavaScript file which passes those methods to specially named functions. This JavaScript file can then be
-provided to Closure-compiler along with the script source of the application. This allows property references from
-templates to be consistently renamed and type checked along with the main source.
-
-Using the code-splitting functionality of the compiler, the generated renameable javascript can be directed to a
-separate file. This file can then be used to update the original HTML template with the now-renamed property references.
+This project offers an alternative approach. Prior to compilation with Closure-compiler, the Polymer template html
+is parsed any data binding expressions are extracted. These extracted expressions are then output in an alternative
+form as javascript. This extracted javascript is never intended to be actually executed, but it is provided to
+Closure-compiler during compilation. The compiler can then safely rename references and thus the need to export or
+quote properties used in data-binding is eliminated. In addition, considerable type checking is enabled for data-binding
+expressions.
 
 ## Usage
 
@@ -20,16 +23,19 @@ or can be used as native JS functions.
 
 ### Pre-compilation: Extracting Data-binding Expressions
 
+This first phase of the project parses polymer element templates and produces a javascript file to pass to
+closure-compiler.
+
 **Gulp**
 
 ```js
 const polymerRename = require('@banno/polymer-rename');
-const rename = require('gulp-rename');
+const fileRename = require('gulp-rename');
 
 gulp.task('extract-data-binding-expressions', function() {
   gulp.src('/src/components/**/*.html') // Usually this will be the vulcanized file
       .pipe(polymerRename.extract())
-      .pipe(rename(function (filePath) {
+      .pipe(fileRename(function (filePath) {
         filePath.basename += '.template';
       }))
       .pipe(gulp.dest('./build'));
@@ -39,7 +45,7 @@ gulp.task('extract-data-binding-expressions', function() {
 **JS Functions**
 
 ```js
-const extractExpressions = require('@banno/polymer-rename/lib/extract-expressions');
+const extractExpressions = require('@banno/polymer-rename/lib/extract-expressions/parse-polymer-elements');
 const fs = require('fs');
 
 let expressions = extractExpressions(fs.readFileSync('/src/components/foo-bar.html', {encoding: 'utf8'}));
@@ -48,7 +54,11 @@ console.log(expressions);
 
 ### Example Compilation
 
-Closure-compiler's module flags allow the output to be split into separate files.
+Closure-compiler's code-splitting flags allow the output to be divided into separate files. The compilation must
+reference the [extern file](polymer-rename-externs.js) included with this package.
+
+In addition, the compiler can now warn about mismatched types, misspelled or missing property references and other
+checks.
 
 ```js
 let closureCompiler = require('google-closure-compiler');
@@ -63,15 +73,18 @@ gulp.task('compile-js', function() {
           'foo-bar.template:1:app'
         ],
         externs: [
-          require.resolve('google-closure-compiler/contrib/externs/polymer-1.0.js'), //someday this will be true :)
+          require.resolve('google-closure-compiler/contrib/externs/polymer-1.0.js'),
           require.resolve('@banno/polymer-rename/polymer-rename-externs.js')
         ]
       })
-      .pipe(gulp.dest('./build'));
+      .pipe(gulp.dest('./dist'));
 });
 ```
 
 ### Post-compilation: Find the Renamed Properties And Update the Template
+
+After compilation, the compiler will have consistently renamed references to the properties. The generated javascript
+contains indexes into the original template which will now be replaced with their renamed versions.
 
 **Gulp**
 
@@ -80,7 +93,7 @@ const polymerRename = require('@banno/polymer-rename');
 
 gulp.task('update-html-template', function() {
   gulp.src('./src/components/foo-bar.html') // Usually this will be the vulcanized file
-      .pipe(polymerRename.replace('./build/foo-bar.template.js'))
+      .pipe(polymerRename.replace('./dist/foo-bar.template.js'))
       .pipe(gulp.dest('./dist/components'));
 });
 ```
@@ -88,17 +101,17 @@ gulp.task('update-html-template', function() {
 **JS Functions**
 
 ```js
-const replaceExpressions = require('@banno/polymer-rename/lib/replace-expressions');
+const replaceExpressions = require('@banno/polymer-rename/lib/replace-expressions/replace-expressions');
 const fs = require('fs');
 
 let originalTemplate = fs.readFileSync('./src/components/foo-bar.html', {encoding: 'utf8'});
-let renamedExpressions = fs.readFileSync('./build/foo-bar.template.js', {encoding: 'utf8'});
+let renamedExpressions = fs.readFileSync('./dist/foo-bar.template.js', {encoding: 'utf8'});
 
 let updatedTemplate = replaceExpressions(originalTemplate, renamedExpressions);
 console.log(updatedTemplate);
 ```
 
-## How This Project Works
+## Examples
 
 Giving the following polymer template, the first phase of the project will extract the
 data-binding expressions and create a valid JS file:
@@ -164,10 +177,3 @@ potentially renameable reference. Closure-compiler uses the convention that dott
 but bracketed/array-style property accesses may not. Since Polymer data-binding expressions do not support a bracketed
 style access there is currently no method to indicate that a particular data-binding expression should not be
 renameable.
-
-## Advantages Over The PolymerRenamer
-
-The [PolymerRenamer](https://github.com/polymerlabs/polymerrenamer) project uses the property renaming report as a map
-so that data bound expressions can be replaced with their renamed versions. However the approach has severe limitations
-including failing to protect from dead-code elimination, property collapsing and is also not compatible with the
-type-based optimizations.

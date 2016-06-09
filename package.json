@@ -1,6 +1,6 @@
 {
-  "name": "@banno/polymer-rename",
-  "version": "1.5.0",
+  "name": "polymer-rename",
+  "version": "1.6.0",
   "description": "Rename polymer template databinding expressions and event functions with closure-compiler",
   "main": "index.js",
   "scripts": {
@@ -13,8 +13,7 @@
   "files": [
     "index.js",
     "polymer-rename-externs.js",
-    "lib",
-    "test"
+    "lib"
   ],
   "author": "Chad Killingsworth <chad.killingsworth@banno.com>",
   "license": "Apache-2.0",
@@ -34,6 +33,7 @@
   },
   "devDependencies": {
     "chai": "^3.5.0",
-    "mocha": "^2.4.5"
+    "mocha": "^2.4.5",
+    "vinyl": "^1.1.1"
   }
 }
