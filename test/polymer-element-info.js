@@ -133,7 +133,8 @@ describe('Polymer Element Info', function() {
     });
 
     it('computed property with literals', function () {
-      let element = getPolymerElementInfo('foo-bar', `<div>[[lookup('foo', "bar", foobar, -0.47)]]</div>`)[0];
+      let element = getPolymerElementInfo('foo-bar',
+          `<div>[[lookup('foo', "bar", foobar, -0.47, +0.47, 0.47, -.47, +.47, .47)]]</div>`)[0];
       expect(element.renameableItems.length).to.be.equal(1);
       expect(element.renameableItems[0]).to.be.an.instanceof(methodExpr);
       expect(element.renameableItems[0].methodName).to.be.equal('lookup');
