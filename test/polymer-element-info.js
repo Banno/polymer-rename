@@ -10,7 +10,7 @@ const DomRepeatExpr = require('../lib/extract-expressions/expressions/dom-repeat
 const DomRepeatNonRenameableExpr = require('../lib/extract-expressions/expressions/dom-repeat-non-renameable');
 
 
-describe('Polymer Element Info', function() {
+describe('polymer element info', function() {
   function getPolymerElementInfo(tagName, templateContent) {
     let html = `<dom-module id="${tagName}">
   <template>${templateContent}</template>
