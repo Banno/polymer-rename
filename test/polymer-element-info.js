@@ -131,6 +131,28 @@ describe('Polymer Element Info', function() {
       expect(element.renameableItems[1].start).to.be.equal(start);
       expect(element.renameableItems[1].end).to.be.equal(end);
     });
+
+    it('computed property with literals', function () {
+      let element = getPolymerElementInfo('foo-bar', `<div>[[lookup('foo', "bar", foobar, -0.47)]]</div>`)[0];
+      expect(element.renameableItems.length).to.be.equal(1);
+      expect(element.renameableItems[0]).to.be.an.instanceof(methodExpr);
+      expect(element.renameableItems[0].methodName).to.be.equal('lookup');
+
+      let start = element.documentHtmlString.indexOf('lookup');
+      let end = start + 'lookup'.length;
+      expect(element.renameableItems[0].start).to.be.equal(start);
+      expect(element.renameableItems[0].end).to.be.equal(end);
+
+      expect(element.renameableItems[0].args.length).to.be.equal(1);
+
+      expect(element.renameableItems[0].args[0]).to.be.an.instanceof(symbolExpr);
+      expect(element.renameableItems[0].args[0].isElementProperty).to.be.true;
+      expect(element.renameableItems[0].args[0].symbol).to.be.equal('foobar');
+      start = element.documentHtmlString.indexOf('foobar');
+      end = start + 'foobar'.length;
+      expect(element.renameableItems[0].args[0].start).to.be.equal(start);
+      expect(element.renameableItems[0].args[0].end).to.be.equal(end);
+    });
   });
 
   describe('dom-repeat templates', function() {
