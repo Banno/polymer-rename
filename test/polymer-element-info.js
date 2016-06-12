@@ -169,7 +169,7 @@ describe('polymer element info', function() {
 
     it('computed property with literals', function () {
       let element = getPolymerElementInfo('foo-bar',
-          `<div>[[lookup('foo', "bar", foobar, -0.47, +0.47, 0.47, -.47, +.47, .47)]]</div>`)[0];
+          `<div>[[lookup('foo', "bar", foobar, -0.47, +0.47, 0.47, -.47, +.47, .47, 47)]]</div>`)[0];
       expect(element.renameableItems.length).to.be.equal(1);
       expect(element.renameableItems[0]).to.be.an.instanceof(MethodExpr);
       expect(element.renameableItems[0].methodName).to.be.equal('lookup');
@@ -179,7 +179,7 @@ describe('polymer element info', function() {
       expect(element.renameableItems[0].start).to.be.equal(start);
       expect(element.renameableItems[0].end).to.be.equal(end);
 
-      expect(element.renameableItems[0].args.length).to.be.equal(9);
+      expect(element.renameableItems[0].args.length).to.be.equal(10);
 
       let arg = element.renameableItems[0].args[0];
       expect(arg).to.be.an.instanceof(LiteralArgument);
@@ -206,13 +206,17 @@ describe('polymer element info', function() {
       expect(arg.start).to.be.equal(start);
       expect(arg.end).to.be.equal(end);
 
-      arg = element.renameableItems[0].args[3];
-      expect(arg).to.be.an.instanceof(LiteralArgument);
-      expect(arg.symbol).to.be.equal('-0.47');
-      start = element.documentHtmlString.indexOf('-0.47');
-      end = start + '-0.47'.length;
-      expect(arg.start).to.be.equal(start);
-      expect(arg.end).to.be.equal(end);
+      let numericArgs = ['-0.47', '+0.47', '0.47', '-.47', '+.47', '.47', '47'];
+      for (let i = 3; i < element.renameableItems[0].args.length; i++) {
+        arg = element.renameableItems[0].args[i];
+        let literal = numericArgs[i - 3];
+        expect(arg).to.be.an.instanceof(LiteralArgument);
+        expect(arg.symbol).to.be.equal(literal);
+        start = element.documentHtmlString.indexOf(`, ${literal}`) + 2;
+        end = start + literal.length;
+        expect(arg.start).to.be.equal(start);
+        expect(arg.end).to.be.equal(end);
+      }
     });
   });
 
