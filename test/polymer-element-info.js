@@ -5,6 +5,7 @@ const parsePolymerElements = require('../lib/extract-expressions/parse-polymer-e
 const PolymerElementInfo = require('../lib/extract-expressions/polymer-element-info');
 const SymbolExpr = require('../lib/extract-expressions/expressions/symbol');
 const MethodExpr = require('../lib/extract-expressions/expressions/method');
+const LiteralArgument = require('../lib/extract-expressions/expressions/literal');
 const EventListenerExpr = require('../lib/extract-expressions/expressions/event-listener');
 const DomRepeatExpr = require('../lib/extract-expressions/expressions/dom-repeat');
 const DomRepeatNonRenameableExpr = require('../lib/extract-expressions/expressions/dom-repeat-non-renameable');
@@ -29,6 +30,40 @@ describe('polymer element info', function() {
 
       let start = element.documentHtmlString.indexOf('{{bar}}') + 2;
       let end = start + 3;
+
+      expect(element.renameableItems[0].start).to.be.equal(start);
+      expect(element.renameableItems[0].end).to.be.equal(end);
+    });
+
+    it('binding to custom element', function () {
+      let element = getPolymerElementInfo('foo-bar', '<foo-baz data-foo="{{bar}}"></foo-baz>')[0];
+      expect(element.renameableItems.length).to.be.equal(1);
+      expect(element.renameableItems[0]).to.be.an.instanceof(SymbolExpr);
+      expect(element.renameableItems[0].isElementProperty).to.be.true;
+      expect(element.renameableItems[0].symbol).to.be.equal('bar');
+      expect(element.renameableItems[0].elementTagName).to.be.equal('foo-baz');
+      expect(element.renameableItems[0].elementTypeName).to.be.equal('FooBazElement');
+      expect(element.renameableItems[0].elementAttribute).to.be.equal('data-foo');
+      expect(element.renameableItems[0].twoWayBinding).to.be.true;
+
+      let start = element.documentHtmlString.indexOf('{{bar}}') + 2;
+      let end = start + 3;
+
+      expect(element.renameableItems[0].start).to.be.equal(start);
+      expect(element.renameableItems[0].end).to.be.equal(end);
+
+      element = getPolymerElementInfo('foo-bar', '<foo-baz data-foo="[[bar]]"></foo-baz>')[0];
+      expect(element.renameableItems.length).to.be.equal(1);
+      expect(element.renameableItems[0]).to.be.an.instanceof(SymbolExpr);
+      expect(element.renameableItems[0].isElementProperty).to.be.true;
+      expect(element.renameableItems[0].symbol).to.be.equal('bar');
+      expect(element.renameableItems[0].elementTagName).to.be.equal('foo-baz');
+      expect(element.renameableItems[0].elementTypeName).to.be.equal('FooBazElement');
+      expect(element.renameableItems[0].elementAttribute).to.be.equal('data-foo');
+      expect(element.renameableItems[0].twoWayBinding).to.be.false;
+
+      start = element.documentHtmlString.indexOf('[[bar]]') + 2;
+      end = start + 3;
 
       expect(element.renameableItems[0].start).to.be.equal(start);
       expect(element.renameableItems[0].end).to.be.equal(end);
@@ -144,15 +179,40 @@ describe('polymer element info', function() {
       expect(element.renameableItems[0].start).to.be.equal(start);
       expect(element.renameableItems[0].end).to.be.equal(end);
 
-      expect(element.renameableItems[0].args.length).to.be.equal(1);
+      expect(element.renameableItems[0].args.length).to.be.equal(9);
 
-      expect(element.renameableItems[0].args[0]).to.be.an.instanceof(SymbolExpr);
-      expect(element.renameableItems[0].args[0].isElementProperty).to.be.true;
-      expect(element.renameableItems[0].args[0].symbol).to.be.equal('foobar');
+      let arg = element.renameableItems[0].args[0];
+      expect(arg).to.be.an.instanceof(LiteralArgument);
+      expect(arg.symbol).to.be.equal("'foo'");
+      start = element.documentHtmlString.indexOf("'foo'");
+      end = start + "'foo'".length;
+      expect(arg.start).to.be.equal(start);
+      expect(arg.end).to.be.equal(end);
+
+      arg = element.renameableItems[0].args[1];
+      expect(arg).to.be.an.instanceof(LiteralArgument);
+      expect(arg.symbol).to.be.equal('"bar"');
+      start = element.documentHtmlString.indexOf('"bar"');
+      end = start + '"bar"'.length;
+      expect(arg.start).to.be.equal(start);
+      expect(arg.end).to.be.equal(end);
+
+      arg = element.renameableItems[0].args[2];
+      expect(arg).to.be.an.instanceof(SymbolExpr);
+      expect(arg.isElementProperty).to.be.true;
+      expect(arg.symbol).to.be.equal('foobar');
       start = element.documentHtmlString.indexOf('foobar');
       end = start + 'foobar'.length;
-      expect(element.renameableItems[0].args[0].start).to.be.equal(start);
-      expect(element.renameableItems[0].args[0].end).to.be.equal(end);
+      expect(arg.start).to.be.equal(start);
+      expect(arg.end).to.be.equal(end);
+
+      arg = element.renameableItems[0].args[3];
+      expect(arg).to.be.an.instanceof(LiteralArgument);
+      expect(arg.symbol).to.be.equal('-0.47');
+      start = element.documentHtmlString.indexOf('-0.47');
+      end = start + '-0.47'.length;
+      expect(arg.start).to.be.equal(start);
+      expect(arg.end).to.be.equal(end);
     });
   });
 
@@ -500,14 +560,39 @@ describe('polymer element info', function() {
 
       symbolExpr.isElementProperty = false;
       expect(symbolExpr.toString()).to.be.equal(`polymerRename.symbol(1, 2, foo.bar);`);
+
+      symbolExpr.isElementProperty = true;
+      symbolExpr.elementTagName = 'foo-baz';
+      symbolExpr.elementTypeName = 'FooBazElement';
+      symbolExpr.elementAttribute = 'data-attr';
+      symbolExpr.twoWayBinding = false;
+
+      expect(symbolExpr.toString()).to.be.equal(`{
+  let polymerRename_foo_bazElement = /** @type {FooBazElement} */(document.createElement('foo-baz'));
+  polymerRename_foo_bazElement.dataAttr = this.foo.bar;
+}
+polymerRename.symbol(1, 2, this.foo.bar);`);
+
+      symbolExpr.twoWayBinding = true;
+      expect(symbolExpr.toString()).to.be.equal(`{
+  let polymerRename_foo_bazElement = /** @type {FooBazElement} */(document.createElement('foo-baz'));
+  polymerRename_foo_bazElement.dataAttr = this.foo.bar;
+  this.foo.bar = polymerRename_foo_bazElement.dataAttr;
+}
+polymerRename.symbol(1, 2, this.foo.bar);`);
     });
 
     it('method', function() {
       let methodExpr = new MethodExpr(1, 2, 'foo.bar', []);
       let serializedMethod = `polymerRename.method(1, 2, this.foo.bar);`;
-      expect(methodExpr.toString()).to.be.equal(serializedMethod);
+      expect(methodExpr.toString()).to.be.equal('this.foo.bar();\n' + serializedMethod);
+
       methodExpr.args.push(new SymbolExpr(1, 2, 'foo.baz'));
-      expect(methodExpr.toString()).to.be.equal(serializedMethod
+      expect(methodExpr.toString()).to.be.equal('this.foo.bar(this.foo.baz);\n' + serializedMethod
+          + `\npolymerRename.symbol(1, 2, this.foo.baz);`);
+
+      methodExpr.args.push(new LiteralArgument(1, 2, '"foo"'));
+      expect(methodExpr.toString()).to.be.equal('this.foo.bar(this.foo.baz, "foo");\n' + serializedMethod
           + `\npolymerRename.symbol(1, 2, this.foo.baz);`);
     });
 
