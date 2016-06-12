@@ -112,6 +112,34 @@ let updatedTemplate = replaceExpressions(originalTemplate, renamedExpressions);
 console.log(updatedTemplate);
 ```
 
+## Element Type Names
+
+By default, the Polymer pass of Closure-compiler derives the type names from the element tag name. The tag name is
+converted to upper camel case and the string "Element" is appended. Soo `<foo-bar>` becomes type `FooBarElement`.
+
+However, authors can choose to name their own types by assigning the return value of the `Polymer` function to a
+variable. Example:
+
+```js
+myNamespace.FooBar = Polymer({is: 'foo-bar'});
+```
+
+To support this use case, the `polymerRename.extract()` gulp plugin takes an optional argument which is a lookup
+function. The function takes a single argument of the element tag name and returns the type name. If the function
+returns `undefined`, the default behavior will be used as a fallback.
+
+Any tag name who's attributes contain data-binding expressions will be passed to this function. Standard HTML tags
+and custom elements can both be resolved by this function.
+
+```js
+polymerRename.extract(function(tagName) {
+  if (tagName === 'custom-tag') {
+    return 'myNamespace.CustomTagElement';
+  }
+  return undefined;
+})
+```
+
 ## Examples
 
 Giving the following polymer template, the first phase of the project will extract the
