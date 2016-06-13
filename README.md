@@ -69,6 +69,7 @@ gulp.task('compile-js', function() {
       .pipe(closureCompiler({
         compilation_level: 'ADVANCED',
         warning_level: 'VERBOSE',
+        polymer_pass: true,
         module: [
           'app:1',
           'foo-bar.template:1:app'
