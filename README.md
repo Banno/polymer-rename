@@ -76,7 +76,7 @@ gulp.task('compile-js', function() {
         ],
         externs: [
           require.resolve('google-closure-compiler/contrib/externs/polymer-1.0.js'),
-          require.resolve('@banno/polymer-rename/polymer-rename-externs.js')
+          require.resolve('polymer-rename/polymer-rename-externs.js')
         ]
       })
       .pipe(gulp.dest('./dist'));
