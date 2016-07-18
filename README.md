@@ -3,7 +3,7 @@
 [![npm version](https://badge.fury.io/js/polymer-rename.svg)](https://badge.fury.io/js/polymer-rename)
 
 [Closure-compiler](https://developers.google.com/closure/compiler) with `ADVANCED` optimizations, offers the powerful
-ability to rename properties. However, it can only safely be used on code bases which follow it's
+ability to rename properties. However, it can only safely be used on code bases which follow its
 [required conventions](https://developers.google.com/closure/compiler/docs/limitations).
 With the introduction of polymer templates, data binding expressions become external uses of code which the compiler
 must be made aware of or optimizations such as dead-code elimination and property renaming will break the template
@@ -116,7 +116,7 @@ console.log(updatedTemplate);
 ## Element Type Names
 
 By default, the Polymer pass of Closure-compiler derives the type names from the element tag name. The tag name is
-converted to upper camel case and the string "Element" is appended. Soo `<foo-bar>` becomes type `FooBarElement`.
+converted to upper camel case and the string "Element" is appended. So `<foo-bar>` becomes type `FooBarElement`.
 
 However, authors can choose to name their own types by assigning the return value of the `Polymer` function to a
 variable. Example:
