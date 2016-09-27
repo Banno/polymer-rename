@@ -236,7 +236,7 @@ describe('polymer element info', function() {
       expect(element.renameableItems[0].end).to.be.equal(end);
 
       expect(element.renameableItems[1]).to.be.an.instanceof(DomRepeatExpr);
-      expect(element.renameableItems[1].items).to.be.equal('bar');
+      expect(element.renameableItems[1].items).to.be.eql(element.renameableItems[0]);
       expect(element.renameableItems[1].alias).to.be.an('undefined');
       expect(element.renameableItems[1].index).to.be.an('undefined');
       expect(element.renameableItems[1].renameables.length).to.be.equal(2);
@@ -272,7 +272,7 @@ describe('polymer element info', function() {
       expect(element.renameableItems[0].end).to.be.equal(end);
 
       expect(element.renameableItems[1]).to.be.an.instanceof(DomRepeatExpr);
-      expect(element.renameableItems[1].items).to.be.equal('bar');
+      expect(element.renameableItems[1].items).to.be.eql(element.renameableItems[0]);
       expect(element.renameableItems[1].alias).to.be.equal('baz');
       expect(element.renameableItems[1].index).to.be.equal('i');
       expect(element.renameableItems[1].renameables.length).to.be.equal(4);
@@ -332,7 +332,7 @@ describe('polymer element info', function() {
       expect(element.renameableItems[2].end).to.be.equal(end);
 
       expect(element.renameableItems[3]).to.be.an.instanceof(DomRepeatExpr);
-      expect(element.renameableItems[3].items).to.be.equal('bar');
+      expect(element.renameableItems[3].items).to.be.eql(element.renameableItems[0]);
       expect(element.renameableItems[3].alias).to.be.an('undefined');
       expect(element.renameableItems[3].index).to.be.an('undefined');
       expect(element.renameableItems[3].renameables.length).to.be.equal(0);
@@ -392,7 +392,7 @@ describe('polymer element info', function() {
       expect(element.renameableItems[4].end).to.be.equal(end);
 
       expect(element.renameableItems[5]).to.be.an.instanceof(DomRepeatExpr);
-      expect(element.renameableItems[5].items).to.be.equal('bar');
+      expect(element.renameableItems[5].items).to.be.eql(element.renameableItems[0]);
       expect(element.renameableItems[5].alias).to.be.an('undefined');
       expect(element.renameableItems[5].index).to.be.an('undefined');
       expect(element.renameableItems[5].renameables.length).to.be.equal(0);
@@ -409,14 +409,15 @@ describe('polymer element info', function() {
             </template>
           </template>`)[0];
       expect(element.renameableItems.length).to.be.equal(2);
-      let start, end, outer, middle, inner;
+      let start, end, outer, middle, inner, outerItems, middleItems, innerItems;
 
       //
       // Outer dom repeat
       //
       outer = element.renameableItems[1];
+      outerItems = element.renameableItems[0];
       expect(outer).to.be.an.instanceof(DomRepeatExpr);
-      expect(outer.items).to.be.equal('bar');
+      expect(outer.items).to.be.eql(outerItems);
       expect(outer.alias).to.be.equal('outerItem');
       expect(outer.index).to.be.equal('outerIndex');
       expect(outer.renameables.length).to.be.equal(5);
@@ -459,8 +460,10 @@ describe('polymer element info', function() {
       // Middle dom repeat
       //
       middle = outer.renameables[4];
+      middleItems = outer.renameables[3];
+
       expect(middle).to.be.an.instanceof(DomRepeatExpr);
-      expect(middle.items).to.be.equal('outerItem');
+      expect(middle.items).to.be.eql(middleItems);
       expect(middle.alias).to.be.an('undefined');
       expect(middle.index).to.be.an('undefined');
       expect(middle.renameables.length).to.be.equal(2);
@@ -477,8 +480,9 @@ describe('polymer element info', function() {
       // Inner dom repeat
       //
       inner = middle.renameables[1];
+      innerItems = middle.renameables[0];
       expect(inner).to.be.an.instanceof(DomRepeatExpr);
-      expect(inner.items).to.be.equal('item');
+      expect(inner.items).to.be.eql(innerItems);
       expect(inner.alias).to.be.equal('innerItem');
       expect(inner.index).to.be.equal('innerIndex');
       expect(inner.renameables.length).to.be.equal(9);
@@ -606,15 +610,18 @@ polymerRename.symbol(1, 2, this.foo.bar);`);
     });
 
     it('dom-repeat', function() {
-      let domRepeatExpr = new DomRepeatExpr(1, 2, null, 'foo.bar');
+      let domRepeatExpr = new DomRepeatExpr(1, 2, null, new SymbolExpr(1, 2, 'foo.bar'));
       expect(domRepeatExpr.toString()).to.be.equal(`for (let index = 0; index < this.foo.bar.length; index++) {
   let item = this.foo.bar[index];
 }`);
 
+      let symbolItem = domRepeatExpr.items;
+      domRepeatExpr.items = new MethodExpr(1, 2, 'foo.bar', [new SymbolExpr(1, 2, 'bar2')]);
       domRepeatExpr.alias = 'baz';
-      expect(domRepeatExpr.toString()).to.be.equal(`for (let index = 0; index < this.foo.bar.length; index++) {
-  let baz = this.foo.bar[index];
+      expect(domRepeatExpr.toString()).to.be.equal(`for (let index = 0; index < this.foo.bar(this.bar2).length; index++) {
+  let baz = this.foo.bar(this.bar2)[index];
 }`);
+      domRepeatExpr.items = symbolItem;
 
       domRepeatExpr.alias = undefined;
       domRepeatExpr.index = 'itemIndex';
