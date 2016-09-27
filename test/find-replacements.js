@@ -90,20 +90,20 @@ describe('find replacements', function() {
   });
 
   it('dom repeat symbol', function () {
-    let expressions = new FindReplacements(`(function(){polymerRename.domRepeatSymbol(60, 63, 'item', b.a);}).call(document.createElement("foo-bar"));`);
+    let expressions = new FindReplacements(`(function(){polymerRename.domRepeatSymbol(60, 63, 'item', b, b.a);}).call(document.createElement("foo-bar"));`);
     expect(expressions.replacements.length).to.be.equal(1);
     expect(expressions.replacements[0].start).to.be.equal(60);
     expect(expressions.replacements[0].end).to.be.equal(63);
     expect(expressions.replacements[0].value).to.be.equal('item.a');
 
-    expressions = new FindReplacements(`(function(){polymerRename.domRepeatSymbol(60, 63, 'index', c);}).call(document.createElement("foo-bar"));`);
+    expressions = new FindReplacements(`(function(){polymerRename.domRepeatSymbol(60, 63, 'index', c, c);}).call(document.createElement("foo-bar"));`);
     expect(expressions.replacements.length).to.be.equal(1);
     expect(expressions.replacements[0].start).to.be.equal(60);
     expect(expressions.replacements[0].end).to.be.equal(63);
     expect(expressions.replacements[0].value).to.be.equal('index');
 
-    expressions = new FindReplacements(`(function(){polymerRename.domRepeatSymbol(60, 63, 'index', a);}).call(document.createElement("foo-bar"));
-        polymerRename.domRepeatSymbol(90, 93, 'item', b.c)`);
+    expressions = new FindReplacements(`(function(){polymerRename.domRepeatSymbol(60, 63, 'index', a, a);}).call(document.createElement("foo-bar"));
+        polymerRename.domRepeatSymbol(90, 93, 'item', b, b.c)`);
     expect(expressions.replacements.length).to.be.equal(2);
 
     expect(expressions.replacements[0].start).to.be.equal(60);
@@ -131,15 +131,15 @@ for (let a = 0; a < this.a.length; a++) {
   polymerRename.symbol(185, 194, b);
   for (let c = 0; c < b.length; c++) {
     let d = b[c];
-    polymerRename.domRepeatSymbol(242, 246, 'item', d);
+    polymerRename.domRepeatSymbol(242, 246, 'item', b[c], b[c]);
     for (let e = 0; e < d.length; e++) {
       let f = d[e];
       polymerRename.symbol(254, 263, f);
       polymerRename.symbol(275, 285, e);
       polymerRename.symbol(300, 316, b.length);
       polymerRename.symbol(321, 331, a);
-      polymerRename.domRepeatSymbol(336, 347, 'item', d.length);
-      polymerRename.domRepeatSymbol(352, 357, 'index', c);
+      polymerRename.domRepeatSymbol(336, 347, 'item', d[e], d[e].length);
+      polymerRename.domRepeatSymbol(352, 357, 'index', c, c);
       polymerRename.symbol(362, 371, f);
       polymerRename.symbol(376, 386, e);
       polymerRename.symbol(391, 397, this.g);
