@@ -125,6 +125,7 @@ describe('find replacements', function() {
 polymerRename.symbol(78, 81, this.a);
 for (let a = 0; a < this.a.length; a++) {
   let b = this.a[a];
+  polymerRename.domRepeatObserver(85, 88, b.aa);
   polymerRename.symbol(89, 98, b);
   polymerRename.symbol(110, 120, a);
   polymerRename.symbol(131, 141, this.b);
@@ -134,6 +135,7 @@ for (let a = 0; a < this.a.length; a++) {
     polymerRename.domRepeatSymbol(242, 246, 'item', b[c], b[c]);
     for (let e = 0; e < d.length; e++) {
       let f = d[e];
+      polymerRename.domRepeatObserver(248, 251, f.cc);
       polymerRename.symbol(254, 263, f);
       polymerRename.symbol(275, 285, e);
       polymerRename.symbol(300, 316, b.length);
@@ -147,13 +149,18 @@ for (let a = 0; a < this.a.length; a++) {
   }
 }
 }).call(document.createElement("foo-bar"))`);
-    expect(expressions.replacements.length).to.be.equal(15);
+    expect(expressions.replacements.length).to.be.equal(17);
     let index = -1;
 
     index++;
     expect(expressions.replacements[index].start).to.be.equal(78);
     expect(expressions.replacements[index].end).to.be.equal(81);
     expect(expressions.replacements[index].value).to.be.equal('a');
+
+    index++;
+    expect(expressions.replacements[index].start).to.be.equal(85);
+    expect(expressions.replacements[index].end).to.be.equal(88);
+    expect(expressions.replacements[index].value).to.be.equal('aa');
 
     index++;
     expect(expressions.replacements[index].start).to.be.equal(89);
@@ -179,6 +186,11 @@ for (let a = 0; a < this.a.length; a++) {
     expect(expressions.replacements[index].start).to.be.equal(242);
     expect(expressions.replacements[index].end).to.be.equal(246);
     expect(expressions.replacements[index].value).to.be.equal('item');
+
+    index++;
+    expect(expressions.replacements[index].start).to.be.equal(248);
+    expect(expressions.replacements[index].end).to.be.equal(251);
+    expect(expressions.replacements[index].value).to.be.equal('cc');
 
     index++;
     expect(expressions.replacements[index].start).to.be.equal(254);

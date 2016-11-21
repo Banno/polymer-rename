@@ -36,3 +36,10 @@ polymerRename.eventListener = function(start, end, listener) {};
  * @param {*} prop
  */
 polymerRename.domRepeatSymbol = function(start, end, prefixQuoted, prefix, prop) {};
+
+/**
+ * @param {number} start
+ * @param {number} end
+ * @param {*} prop
+ */
+polymerRename.domRepeatObserver = function(start, end, prop) {};

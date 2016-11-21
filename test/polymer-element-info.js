@@ -9,6 +9,8 @@ const LiteralArgument = require('../lib/extract-expressions/expressions/literal'
 const EventListenerExpr = require('../lib/extract-expressions/expressions/event-listener');
 const DomRepeatExpr = require('../lib/extract-expressions/expressions/dom-repeat');
 const DomRepeatNonRenameableExpr = require('../lib/extract-expressions/expressions/dom-repeat-non-renameable');
+const DomRepeatObserverExpr = require('../lib/extract-expressions/expressions/dom-repeat-observer');
+
 
 
 describe('polymer element info', function() {
@@ -341,7 +343,7 @@ describe('polymer element info', function() {
     it('dynamic filtering and sorting', function () {
       let element = getPolymerElementInfo('foo-bar',
           '<template is="dom-repeat" items="{{bar}}" filter="{{computedFilter(foo)}}" sort="{{computeSort(baz)}}" observe="foo baz"><div></div></template>')[0];
-      expect(element.renameableItems.length).to.be.equal(6);
+      expect(element.renameableItems.length).to.be.equal(4);
 
       expect(element.renameableItems[1]).to.be.an.instanceof(MethodExpr);
       expect(element.renameableItems[1].methodName).to.be.equal('computedFilter');
@@ -375,27 +377,29 @@ describe('polymer element info', function() {
       expect(element.renameableItems[2].args[0].start).to.be.equal(start);
       expect(element.renameableItems[2].args[0].end).to.be.equal(end);
 
-      expect(element.renameableItems[3]).to.be.an.instanceof(SymbolExpr);
-      expect(element.renameableItems[3].isElementProperty).to.be.true;
-      expect(element.renameableItems[3].symbol).to.be.equal('foo');
+      expect(element.renameableItems[3]).to.be.an.instanceof(DomRepeatExpr);
+      expect(element.renameableItems[3].items).to.be.eql(element.renameableItems[0]);
+      expect(element.renameableItems[3].alias).to.be.an('undefined');
+      expect(element.renameableItems[3].index).to.be.an('undefined');
+      expect(element.renameableItems[3].renameables.length).to.be.equal(2);
+
+      let observer = element.renameableItems[3].renameables[0];
+      expect(observer).to.be.an.instanceof(DomRepeatObserverExpr);
+      expect(observer.isElementProperty).to.be.true;
+      expect(observer.symbol).to.be.equal('foo');
       start = element.documentHtmlString.indexOf('"foo ') + 1;
       end = start + 3;
-      expect(element.renameableItems[3].start).to.be.equal(start);
-      expect(element.renameableItems[3].end).to.be.equal(end);
+      expect(observer.start).to.be.equal(start);
+      expect(observer.end).to.be.equal(end);
 
-      expect(element.renameableItems[4]).to.be.an.instanceof(SymbolExpr);
-      expect(element.renameableItems[4].isElementProperty).to.be.true;
-      expect(element.renameableItems[4].symbol).to.be.equal('baz');
+      observer = element.renameableItems[3].renameables[1];
+      expect(observer).to.be.an.instanceof(DomRepeatObserverExpr);
+      expect(observer.isElementProperty).to.be.true;
+      expect(observer.symbol).to.be.equal('baz');
       start = element.documentHtmlString.indexOf(' baz"') + 1;
       end = start + 3;
-      expect(element.renameableItems[4].start).to.be.equal(start);
-      expect(element.renameableItems[4].end).to.be.equal(end);
-
-      expect(element.renameableItems[5]).to.be.an.instanceof(DomRepeatExpr);
-      expect(element.renameableItems[5].items).to.be.eql(element.renameableItems[0]);
-      expect(element.renameableItems[5].alias).to.be.an('undefined');
-      expect(element.renameableItems[5].index).to.be.an('undefined');
-      expect(element.renameableItems[5].renameables.length).to.be.equal(0);
+      expect(observer.start).to.be.equal(start);
+      expect(observer.end).to.be.equal(end);
     });
 
     it('nested repeats', function () {
@@ -610,29 +614,36 @@ polymerRename.symbol(1, 2, this.foo.bar);`);
     });
 
     it('dom-repeat', function() {
-      let domRepeatExpr = new DomRepeatExpr(1, 2, null, new SymbolExpr(1, 2, 'foo.bar'));
+      let domRepeatExpr = new DomRepeatExpr(1, 2, null, new SymbolExpr(1, 2, 'foo.bar'),
+          [new DomRepeatObserverExpr(new SymbolExpr(1, 2, 'bazbar', null))]);
       expect(domRepeatExpr.toString()).to.be.equal(`for (let index = 0; index < this.foo.bar.length; index++) {
   let item = this.foo.bar[index];
+  polymerRename.domRepeatObserver(1, 2, item.bazbar);
 }`);
 
       let symbolItem = domRepeatExpr.items;
       domRepeatExpr.items = new MethodExpr(1, 2, 'foo.bar', [new SymbolExpr(1, 2, 'bar2')]);
       domRepeatExpr.alias = 'baz';
+      domRepeatExpr.renameables[0].itemName = 'baz';
       expect(domRepeatExpr.toString()).to.be.equal(`for (let index = 0; index < this.foo.bar(this.bar2).length; index++) {
   let baz = this.foo.bar(this.bar2)[index];
+  polymerRename.domRepeatObserver(1, 2, baz.bazbar);
 }`);
       domRepeatExpr.items = symbolItem;
 
       domRepeatExpr.alias = undefined;
+      domRepeatExpr.renameables[0].itemName = undefined;
       domRepeatExpr.index = 'itemIndex';
       expect(domRepeatExpr.toString()).to.be.equal(`for (let itemIndex = 0; itemIndex < this.foo.bar.length; itemIndex++) {
   let item = this.foo.bar[itemIndex];
+  polymerRename.domRepeatObserver(1, 2, item.bazbar);
 }`);
 
       domRepeatExpr.index = undefined;
       domRepeatExpr.renameables.push(new SymbolExpr(1, 2, 'item', false));
       expect(domRepeatExpr.toString()).to.be.equal(`for (let index = 0; index < this.foo.bar.length; index++) {
   let item = this.foo.bar[index];
+  polymerRename.domRepeatObserver(1, 2, item.bazbar);
   polymerRename.symbol(1, 2, item);
 }`);
     });
