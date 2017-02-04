@@ -30,7 +30,7 @@ closure-compiler.
 **Gulp**
 
 ```js
-const polymerRename = require('@banno/polymer-rename');
+const polymerRename = require('polymer-rename');
 const fileRename = require('gulp-rename');
 
 gulp.task('extract-data-binding-expressions', function() {
@@ -46,7 +46,7 @@ gulp.task('extract-data-binding-expressions', function() {
 **JS Functions**
 
 ```js
-const extractExpressions = require('@banno/polymer-rename/lib/extract-expressions/parse-polymer-elements');
+const extractExpressions = require('polymer-rename/lib/extract-expressions/parse-polymer-elements');
 const fs = require('fs');
 
 let expressions = extractExpressions(fs.readFileSync('/src/components/foo-bar.html', {encoding: 'utf8'}));
@@ -91,7 +91,7 @@ contains indexes into the original template which will now be replaced with thei
 **Gulp**
 
 ```js
-const polymerRename = require('@banno/polymer-rename');
+const polymerRename = require('polymer-rename');
 
 gulp.task('update-html-template', function() {
   gulp.src('./src/components/foo-bar.html') // Usually this will be the vulcanized file
@@ -103,7 +103,7 @@ gulp.task('update-html-template', function() {
 **JS Functions**
 
 ```js
-const replaceExpressions = require('@banno/polymer-rename/lib/replace-expressions/replace-expressions');
+const replaceExpressions = require('polymer-rename/lib/replace-expressions/replace-expressions');
 const fs = require('fs');
 
 let originalTemplate = fs.readFileSync('./src/components/foo-bar.html', {encoding: 'utf8'});
