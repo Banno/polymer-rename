@@ -20,6 +20,92 @@ quote properties used in data-binding is eliminated.
 
 In addition, considerable type checking is enabled for data-binding expressions.
 
+**Original**
+
+```html
+<dom-module id="add-or-subtract">
+  <template>
+    <div><button on-tap="_addOne">Increase</button></div>
+    <div><button on-tap="_subtractOne">Decrease</button></div>
+  </template>
+  <script>
+    Polymer({
+      is: 'add-or-subtract',
+      properties: {
+        value: {
+          type: Number,
+          notify: true
+        }
+      },
+      _addOne: function() { this.value++; },
+      _subtractOne: function() { this.value--; }
+    });
+  </script>
+</dom-module>
+<dom-module id="foo-bar">
+  <template>
+    <template is="dom-repeat" items="[[numList]]" as="num">
+      <add-or-subtract on-value-changed="{{_valueChanged}}" value="[[num]]"></add-or-subtract>
+    </template>
+  </template>
+  <script>
+    Polymer({
+      is: 'foo-bar',
+      properties: {
+        numList: {
+          type: Array,
+          value: () => [1, 2, 3, 4];
+        }
+      }
+      _valueChanged: function() {}
+    });
+  </script>
+</dom-module>
+```
+
+**After Compilation/Renaming**
+
+```html
+<dom-module id="add-or-subtract">
+  <template>
+    <div><button on-tap="a">Increase</button></div>
+    <div><button on-tap="b">Decrease</button></div>
+  </template>
+  <script>
+    Polymer({
+      is: 'add-or-subtract',
+      properties: {
+        c: {
+          type: Number,
+          notify: true
+        }
+      },
+      a: function() { this.c++; },
+      b: function() { this.c--; }
+    });
+  </script>
+</dom-module>
+<dom-module id="foo-bar">
+  <template>
+    <template is="dom-repeat" items="[[d]]" as="e">
+      <add-or-subtract on-c-changed="{{f}}" value="[[e]]"></add-or-subtract>
+    </template>
+  </template>
+  <script>
+    Polymer({
+      is: 'foo-bar',
+      properties: {
+        d: {
+          type: Array,
+          value: () => [1, 2, 3, 4];
+        }
+      }
+      f: function() {}
+    });
+  </script>
+</dom-module>
+```
+
 ## Using Polymer 2 Renaming
 
 For Polymer 1, Closure-Compiler blocked renaming of any declared property. With Polymer 2, the compiler now uses
