@@ -329,6 +329,66 @@ The compiler consumes the JS file and outputs the renamed expressions:
 
 The provided indexes are now used to update the original Polymer template.
 
+## Supporting String Based Polymer Features
+
+Several functions and options in Polymer require providing property names as strings. This is problematic as
+Closure-Compiler does not rename strings. This would include the following features:
+
+ * [Computed properties](https://www.polymer-project.org/1.0/docs/devguide/observers#computed-properties)
+ * [Observers](https://www.polymer-project.org/1.0/docs/devguide/observers#change-callbacks)
+ * [Polymer 1 Listeners](https://www.polymer-project.org/1.0/docs/devguide/events#event-listeners)
+ * [notifyPath](https://www.polymer-project.org/1.0/docs/devguide/model-data#notify-path)
+ * [notifySplices](https://www.polymer-project.org/1.0/docs/devguide/model-data#notifysplices)
+ * [set](https://www.polymer-project.org/1.0/docs/devguide/model-data#set-path)
+
+To work around such limitations, Closure-Compiler recognizes two special functions defined in Closure-Library.
+If your project does not utilize Closure-Library, you can simply copy the definitions for these two
+functions to your code base. As long as they are named the same, the compiler will recognize them.
+
+### Property Reflection with `goog.reflect.objectProperty`
+
+[`goog.reflect.objectProperty`](https://google.github.io/closure-library/api/goog.reflect.html#objectProperty)
+returns a renamed string for an object instance. It's particularly helpful when calling `notifyPath`, `notifySplices`
+or `set`.
+
+```js
+this.notifyPath(goog.reflect.objectProperty('foo', this), this.foo);
+```
+
+### Property Reflection with `goog.reflect.object`
+
+[`goog.reflect.object`](https://google.github.io/closure-library/api/goog.reflect.html#object)
+renames the keys of an object literal consistently with a provided constructor. It's useful when an instance
+of the object is not available.
+
+```js
+// If using closure-library, this function is goog.object.transpose
+function swapKeysAndValues(obj) {
+  let swappedObj = {};
+  Object.keys(obj).map(key => {
+    swappedObj[obj[key]] = key;
+  });
+  return swappedObj;
+}
+
+var myCustomElementProps = swapKeysAndValues(
+  goog.reflect.object(MyCustomElement, {
+    _fooChanged: '_fooChanged'
+  })
+);
+
+var MyCustomElement = Polymer({
+  is: 'my-custom',
+  properties: {
+    foo: {
+      type: Boolean,
+      observer: myCustomElementProps['_fooChanged']
+    }
+  },
+  _fooChanged: function(newValue, oldValue) {}
+});
+```
+
 ## Limitations of This Project
 
 Properties which are quoted are no longer renamed. However sub-paths are not analyzed. If the a property subpath
