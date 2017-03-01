@@ -44,7 +44,7 @@ describe('gulp-polymer-rename - extract phase', function() {
 
 (/** @this {FooBarElement} */ function() {
   polymerRename.identifier(60, 63, this.bar);
-}).call(/** @type {!FooBarElement} */ (document.createElement("foo-bar")))
+}).call(/** @type {!FooBarElement} */ (document.createElement("foo-bar")));
 `);
       });
     });
