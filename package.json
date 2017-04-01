@@ -34,11 +34,11 @@
   "dependencies": {
     "acorn": "^3.0.4",
     "gulp-util": "^3.0.7",
-    "polymer-analyzer": "polymer/polymer-analyzer#master"
+    "polymer-analyzer": "polymer/polymer-analyzer#v2.0.0-alpha.34",
+    "tree-walk": "github:chadkillingsworth/tree-walk#add-walk"
   },
   "devDependencies": {
     "chai": "^3.5.0",
-    "mocha": "^3.2.0",
-    "tree-walk": "github:chadkillingsworth/tree-walk#add-walk"
+    "mocha": "^3.2.0"
   }
 }
