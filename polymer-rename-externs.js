@@ -25,6 +25,12 @@ polymerRename.method = function(start, end, identifier, baseObject, baseObjectNa
  */
 polymerRename.identifier = function(start, end, identifier, baseObject, baseObjectName) {};
 
+/** @param {boolean} filter */
+polymerRename.domRepeatFilter = function(filter) {};
+
+/** @param {number} compare */
+polymerRename.domRepeatSort = function(compare) {};
+
 /**
  * @param {number} start
  * @param {number} end
