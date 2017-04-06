@@ -1,6 +1,6 @@
 {
   "name": "polymer-rename",
-  "version": "2.0.0-rc.1",
+  "version": "2.0.0-rc.2",
   "description": "Rename polymer template databinding expressions and event functions with closure-compiler",
   "main": "index.js",
   "publishConfig": {
@@ -29,7 +29,8 @@
   },
   "homepage": "https://github.com/Banno/polymer-rename#readme",
   "bundledDependencies": [
-    "tree-walk"
+    "tree-walk",
+    "polymer-analyzer"
   ],
   "dependencies": {
     "acorn": "^3.0.4",
