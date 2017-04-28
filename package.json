@@ -35,7 +35,7 @@
   "dependencies": {
     "acorn": "^3.0.4",
     "gulp-util": "^3.0.7",
-    "polymer-analyzer": "polymer/polymer-analyzer#v2.0.0-alpha.34",
+    "polymer-analyzer": "polymer/polymer-analyzer#v2.0.0-alpha.38",
     "tree-walk": "github:chadkillingsworth/tree-walk#add-walk"
   },
   "devDependencies": {
