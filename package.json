@@ -1,6 +1,6 @@
 {
   "name": "polymer-rename",
-  "version": "2.0.0-rc.2",
+  "version": "2.0.0-rc.3",
   "description": "Rename polymer template databinding expressions and event functions with closure-compiler",
   "main": "index.js",
   "publishConfig": {
@@ -35,7 +35,7 @@
   "dependencies": {
     "acorn": "^3.0.4",
     "gulp-util": "^3.0.7",
-    "polymer-analyzer": "polymer/polymer-analyzer#v2.0.0-alpha.38",
+    "polymer-analyzer": "2.0.0-alpha.40",
     "tree-walk": "github:chadkillingsworth/tree-walk#add-walk"
   },
   "devDependencies": {
