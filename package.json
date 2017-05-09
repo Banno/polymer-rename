@@ -29,8 +29,7 @@
   },
   "homepage": "https://github.com/Banno/polymer-rename#readme",
   "bundledDependencies": [
-    "tree-walk",
-    "polymer-analyzer"
+    "tree-walk"
   ],
   "dependencies": {
     "acorn": "^3.0.4",
