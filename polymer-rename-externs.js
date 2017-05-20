@@ -10,16 +10,43 @@ var polymerRename = {};
 /**
  * @param {number} start
  * @param {number} end
- * @param {!Function} prop
+ * @param {!Function} identifier
+ * @param {*=} baseObject
+ * @param {string=} baseObjectName
  */
-polymerRename.method = function(start, end, prop) {}
+polymerRename.method = function(start, end, identifier, baseObject, baseObjectName) {};
 
 /**
  * @param {number} start
  * @param {number} end
+ * @param {*} identifier
+ * @param {*=} baseObject
+ * @param {string=} baseObjectName
+ */
+polymerRename.identifier = function(start, end, identifier, baseObject, baseObjectName) {};
+
+/** @param {boolean} filter */
+polymerRename.domRepeatFilter = function(filter) {};
+
+/** @param {number} compare */
+polymerRename.domRepeatSort = function(compare) {};
+
+/**
+ * @param {number} start
+ * @param {number} end
+ * @param {*} identifier
+ * @param {*} baseObject
+ * @param {string} baseObjectName
+ */
+polymerRename.domRepeatObserve = function(start, end, identifier, baseObject, baseObjectName) {};
+
+/**
+ * @param {number} start
+ * @param {number} end
+ * @param {Element} customElement
  * @param {*} prop
  */
-polymerRename.symbol = function(start, end, prop) {}
+polymerRename.attribute = function(start, end, customElement, prop) {};
 
 /**
  * @param {number} start
@@ -27,19 +54,3 @@ polymerRename.symbol = function(start, end, prop) {}
  * @param {EventListener|function(!Event):(boolean|undefined)} listener
  */
 polymerRename.eventListener = function(start, end, listener) {};
-
-/**
- * @param {number} start
- * @param {number} end
- * @param {string} prefixQuoted
- * @param {*} prefix
- * @param {*} prop
- */
-polymerRename.domRepeatSymbol = function(start, end, prefixQuoted, prefix, prop) {};
-
-/**
- * @param {number} start
- * @param {number} end
- * @param {*} prop
- */
-polymerRename.domRepeatObserver = function(start, end, prop) {};

@@ -2,6 +2,8 @@
 [![Build Status](https://travis-ci.org/Banno/polymer-rename.svg?branch=master)](https://travis-ci.org/Banno/polymer-rename)
 [![npm version](https://badge.fury.io/js/polymer-rename.svg)](https://badge.fury.io/js/polymer-rename)
 
+**Updated for Polymer 2**
+
 [Closure-compiler](https://developers.google.com/closure/compiler) with `ADVANCED` optimizations, offers the powerful
 ability to rename properties. However, it can only safely be used on code bases which follow its
 [required conventions](https://developers.google.com/closure/compiler/docs/limitations).
@@ -14,8 +16,125 @@ This project offers an alternative approach. Prior to compilation with Closure-c
 is parsed and any data binding expressions are extracted. These extracted expressions are then output in an alternative
 form as javascript. This extracted javascript is never intended to be actually executed, but it is provided to
 Closure-compiler during compilation. The compiler can then safely rename references and thus the need to export or
-quote properties used in data-binding is eliminated. In addition, considerable type checking is enabled for data-binding
-expressions.
+quote properties used in data-binding is eliminated.
+
+In addition, considerable type checking is enabled for data-binding expressions.
+
+**Original**
+
+```html
+<dom-module id="add-or-subtract">
+  <template>
+    <div><button on-tap="_addOne">Increase</button></div>
+    <div><button on-tap="_subtractOne">Decrease</button></div>
+  </template>
+  <script>
+    /**
+     * @polymer
+     * @customElement
+     * @extends {Polymer.Element}
+     */
+    class AddOrSubtractElement extends Polymer.Element {
+      static get is() { return 'add-or-subtract'; }
+      static get properties() {
+        return {
+          value: {
+            type: Number,
+            notify: true
+          }
+        };
+      }
+      _addOne() { this.value++; }
+      _subtractOne() { this.value--; }
+    }
+    customElements.define(AddOrSubtractElement.is, AddOrSubtractElement);
+  </script>
+</dom-module>
+<dom-module id="foo-bar">
+  <template>
+    <template is="dom-repeat" items="[[numList]]" as="num">
+      <add-or-subtract on-value-changed="{{_valueChanged}}" value="[[num]]"></add-or-subtract>
+    </template>
+  </template>
+  <script>
+    /**
+     * @polymer
+     * @customElement
+     * @extends {Polymer.Element}
+     */
+    class FooBarElement extends Polymer.Element {
+      static get is() { return 'foo-bar'; }
+      static get properties() {
+        return {
+          numList: {
+            type: Array,
+            value: () => [1, 2, 3, 4]
+          }
+        };
+      }
+      _valueChanged() {}
+    }
+    customElements.define(FooBarElement.is, FooBarElement);
+  </script>
+</dom-module>
+```
+
+**After Compilation/Renaming**
+
+```html
+<dom-module id="add-or-subtract">
+  <template>
+    <div><button on-tap="a">Increase</button></div>
+    <div><button on-tap="b">Decrease</button></div>
+  </template>
+  <script>
+    class A extends Polymer.Element {
+      static get is() { return 'add-or-subtract'; }
+      static get properties() {
+        return {
+          c: {
+            type: Number,
+            notify: true
+          }
+        };
+      }
+      a() { this.c++; }
+      b() { this.c--; }
+    }
+    customElements.define(A.is, A);
+  </script>
+</dom-module>
+<dom-module id="foo-bar">
+  <template>
+    <template is="dom-repeat" items="[[d]]" as="e">
+      <add-or-subtract on-c-changed="{{f}}" value="[[e]]"></add-or-subtract>
+    </template>
+  </template>
+  <script>
+    class B extends Polymer.Element {
+      static get is() { return 'foo-bar'; }
+      static get properties() {
+        return {
+          d: {
+            type: Array,
+            value: () => [1, 2, 3, 4]
+          }
+        };
+      }
+      f() {}
+    }
+    customElements.define(B.is, B);
+  </script>
+</dom-module>
+```
+
+## Using Polymer 2 Renaming
+
+For Polymer 1, Closure-Compiler blocked renaming of any declared property. With Polymer 2, the compiler now uses
+the standard conventions: quoted properties are not renamed and other properties are. Declared properties
+with the `reflectToAttribute` or `readOnly` properties will never be renamed.
+
+In addition, this project will rename attributes which map to properties of a custom element.
 
 ## Usage
 
@@ -27,30 +146,22 @@ or can be used as native JS functions.
 This first phase of the project parses polymer element templates and produces a javascript file to pass to
 closure-compiler.
 
+The plugin makes use of the [polymer-analyzer](https://github.com/polymer/polymer-analyzer) and requires both the
+HTML templates as well as any external JS source that contains element definitions.
+
 **Gulp**
 
 ```js
+const gulp = require('gulp');
 const polymerRename = require('polymer-rename');
-const fileRename = require('gulp-rename');
 
 gulp.task('extract-data-binding-expressions', function() {
-  gulp.src('/src/components/**/*.html') // Usually this will be the vulcanized file
-      .pipe(polymerRename.extract())
-      .pipe(fileRename(function (filePath) {
-        filePath.basename += '.template';
+  gulp.src('/src/components/**/*.html') // Usually this will be the bundled file - may also need to add .js files
+      .pipe(polymerRename.extract({
+        outputFilename: 'foo-bar.template.js'
       }))
       .pipe(gulp.dest('./build'));
 });
-```
-
-**JS Functions**
-
-```js
-const extractExpressions = require('polymer-rename/lib/extract-expressions/parse-polymer-elements');
-const fs = require('fs');
-
-let expressions = extractExpressions(fs.readFileSync('/src/components/foo-bar.html', {encoding: 'utf8'}));
-console.log(expressions);
 ```
 
 ### Example Compilation
@@ -94,52 +205,16 @@ contains indexes into the original template which will now be replaced with thei
 const polymerRename = require('polymer-rename');
 
 gulp.task('update-html-template', function() {
-  gulp.src('./src/components/foo-bar.html') // Usually this will be the vulcanized file
+  gulp.src('./src/components/foo-bar.html') // Usually this will be the bundled file
       .pipe(polymerRename.replace('./dist/foo-bar.template.js'))
       .pipe(gulp.dest('./dist/components'));
 });
 ```
 
-**JS Functions**
-
-```js
-const replaceExpressions = require('polymer-rename/lib/replace-expressions/replace-expressions');
-const fs = require('fs');
-
-let originalTemplate = fs.readFileSync('./src/components/foo-bar.html', {encoding: 'utf8'});
-let renamedExpressions = fs.readFileSync('./dist/foo-bar.template.js', {encoding: 'utf8'});
-
-let updatedTemplate = replaceExpressions(originalTemplate, renamedExpressions);
-console.log(updatedTemplate);
-```
-
 ## Element Type Names
 
-By default, the Polymer pass of Closure-compiler derives the type names from the element tag name. The tag name is
-converted to upper camel case and the string "Element" is appended. So `<foo-bar>` becomes type `FooBarElement`.
-
-However, authors can choose to name their own types by assigning the return value of the `Polymer` function to a
-variable. Example:
-
-```js
-myNamespace.FooBar = Polymer({is: 'foo-bar'});
-```
-
-To support this use case, the `polymerRename.extract()` gulp plugin takes an optional argument which is a lookup
-function. The function takes a single argument of the element tag name and returns the type name. If the function
-returns `undefined`, the default behavior will be used as a fallback.
-
-Any tag name who's attributes contain data-binding expressions will be passed to this function. Standard HTML tags
-and custom elements can both be resolved by this function.
-
-```js
-polymerRename.extract(function(tagName) {
-  if (tagName === 'custom-tag') {
-    return 'myNamespace.CustomTagElement';
-  }
-  return undefined;
-})
-```
+polymer-rename obtains the type names of elements from polymer-analyzer. Type names for
+elements must be global.
 
 ## Examples
 
@@ -156,6 +231,37 @@ data-binding expressions and create a valid JS file:
       <div>[[item.city]], [[item.state]] [[item.zip]]</div>
     </template>
   </template>
+  <script>
+  /**
+   * @polymer
+   * @customElement
+   * @extends {Polymer.Element}
+   */
+  class FooBarElement extends Polymer.Element {
+    static get is() { return "foo-bar"; }
+    static get properties() {
+      return {
+        name: String,
+        employer: String,
+        
+        /** @type {Array<{street: string, city: string, state: string, zip: string}>} */
+        addresses: Array
+      };
+    }
+    
+    /**
+     * @param {?string} a
+     * @return {string}
+     */
+    formatName(a) { return a || ''; },
+    
+    /** @param {!Event=} evt */
+    nameClicked(evt) {
+      console.log(this.name);
+    }
+  }
+  customElements.define(FooBarElement.is, FooBarElement);
+  </script>
 </dom-module>
 ```
 
@@ -163,18 +269,19 @@ Generated JavaScript from the extracted data-bound properties:
 
 ```js
 (/** @this {FooBarElement} */ function() {
-polymerRename.eventListener(72, 83, this.nameClicked);
-polymerRename.method(87, 97, this.formatName);
-polymerRename.symbol(98, 102, this.name);
-polymerRename.symbol(123, 131, this.employer);
-polymerRename.symbol(179, 188, this.addresses);
-for (let index = 0; index < this.addresses.length; index++) {
-  let item = this.addresses[index];
-  polymerRename.domRepeatSymbol(206, 217, 'item', item.street);
-  polymerRename.domRepeatSymbol(239, 248, 'item', item.city);
-  polymerRename.domRepeatSymbol(254, 264, 'item', item.state);
-  polymerRename.domRepeatSymbol(269, 277, 'item', item.zip);
-}
+  polymerRename.eventListener(72, 83, this.nameClicked);
+  polymerRename.identifier(98, 102, this.name);
+  this.formatName(this.name);
+  polymerRename.method(87, 97, this.formatName);
+  polymerRename.identifier(123, 131, this.employer);
+  polymerRename.identifier(179, 188, this.addresses);
+  for (let index = 0; index < this.addresses.length; index++) {
+    let item = this.addresses[index];
+    polymerRename.identifier(206, 217, item.street, item, 'item');
+    polymerRename.identifier(239, 248, item.city, item, 'item');
+    polymerRename.identifier(254, 264, item.state, item, 'item');
+    polymerRename.identifier(269, 277, item.zip, item, 'item');
+  }
 }).call(/** @type {FooBarElement} */ (document.createElement("foo-bar")))
 ```
 Each of the special function calls is [defined as an extern](polymer-rename-externs.js). Each call takes a pair of
@@ -185,27 +292,85 @@ The compiler consumes the JS file and outputs the renamed expressions:
 
 ```js
 (function() {
-polymerRename.eventListener(72, 83, this.a);
-polymerRename.method(87, 97, this.b);
-polymerRename.symbol(98, 102, this.c);
-polymerRename.symbol(123, 131, this.d);
-polymerRename.symbol(179, 188, this.e);
-for (let a = 0; a < this.e.length; a++) {
-  let b = this.e[a];
-  polymerRename.domRepeatSymbol(206, 217, 'item', b.f);
-  polymerRename.domRepeatSymbol(239, 248, 'item', b.g);
-  polymerRename.domRepeatSymbol(254, 264, 'item', b.h);
-  polymerRename.domRepeatSymbol(269, 277, 'item', b.i);
-}
+  polymerRename.eventListener(72, 83, this.a);
+  polymerRename.identifier(98, 102, this.b);
+  this.c(this.b);
+  polymerRename.method(87, 97, this.c);
+  polymerRename.identifier(123, 131, this.d);
+  polymerRename.identifier(179, 188, this.e);
+  for (let a = 0; a < this.e.length; a++) {
+    let b = this.e[a];
+    polymerRename.identifier(206, 217, b.f, b, 'item');
+    polymerRename.identifier(239, 248, b.g, b, 'item');
+    polymerRename.identifier(254, 264, b.h, b, 'item');
+    polymerRename.identifier(269, 277, b.i, b, 'item');
+  }
 }).call(document.createElement("foo-bar"))
 ```
 
 The provided indexes are now used to update the original Polymer template.
 
+## Supporting String Based Polymer Features
+
+Several functions and options in Polymer require providing property names as strings. This is problematic as
+Closure-Compiler does not rename strings. This would include the following features:
+
+ * [Computed properties](https://www.polymer-project.org/1.0/docs/devguide/observers#computed-properties)
+ * [Observers](https://www.polymer-project.org/1.0/docs/devguide/observers#change-callbacks)
+ * [Polymer 1 Listeners](https://www.polymer-project.org/1.0/docs/devguide/events#event-listeners)
+ * [notifyPath](https://www.polymer-project.org/1.0/docs/devguide/model-data#notify-path)
+ * [notifySplices](https://www.polymer-project.org/1.0/docs/devguide/model-data#notifysplices)
+ * [set](https://www.polymer-project.org/1.0/docs/devguide/model-data#set-path)
+
+To work around such limitations, Closure-Compiler recognizes two special functions defined in Closure-Library.
+If your project does not utilize Closure-Library, you can simply copy the definitions for these two
+functions to your code base. As long as they are named the same, the compiler will recognize them.
+
+### Property Reflection with `goog.reflect.objectProperty`
+
+[`goog.reflect.objectProperty`](https://google.github.io/closure-library/api/goog.reflect.html#objectProperty)
+returns a renamed string for an object instance. It's particularly helpful when calling `notifyPath`, `notifySplices`
+or `set`.
+
+```js
+this.notifyPath(goog.reflect.objectProperty('foo', this), this.foo);
+```
+
+### Property Reflection with `goog.reflect.object`
+
+[`goog.reflect.object`](https://google.github.io/closure-library/api/goog.reflect.html#object)
+renames the keys of an object literal consistently with a provided constructor. It's useful when an instance
+of the object is not available.
+
+```js
+// If using closure-library, this function is goog.object.transpose
+function swapKeysAndValues(obj) {
+  let swappedObj = {};
+  Object.keys(obj).map(key => {
+    swappedObj[obj[key]] = key;
+  });
+  return swappedObj;
+}
+
+var myCustomElementProps = swapKeysAndValues(
+  goog.reflect.object(MyCustomElement, {
+    _fooChanged: '_fooChanged'
+  })
+);
+
+var MyCustomElement = Polymer({
+  is: 'my-custom',
+  properties: {
+    foo: {
+      type: Boolean,
+      observer: myCustomElementProps['_fooChanged']
+    }
+  },
+  _fooChanged: function(newValue, oldValue) {}
+});
+```
+
 ## Limitations of This Project
 
-This methodology is an all-or-nothing approach. Every data bound expression will be forwarded to the compiler as a
-potentially renameable reference. Closure-compiler uses the convention that dotted property accesses may be renamed
-but bracketed/array-style property accesses may not. Since Polymer data-binding expressions do not support a bracketed
-style access there is currently no method to indicate that a particular data-binding expression should not be
-renameable.
+Properties which are quoted are no longer renamed. However sub-paths are not analyzed. If the a property subpath
+should be blocked from renaming, use extern types to ensure that the compiler will not rename the paths.
