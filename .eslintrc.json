@@ -1,0 +1,20 @@
+{
+  "extends": "google",
+  "parserOptions": {
+    "ecmaVersion": 6,
+    "sourceType": "module"
+  },
+  "rules": {
+    "max-len": [
+      "error",
+      120,
+      2,
+      {
+        "ignoreUrls": true,
+        "ignoreComments": true
+      }
+    ],
+    "arrow-parens": "off",
+    "comma-dangle": "off"
+  }
+}
