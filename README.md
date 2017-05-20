@@ -29,17 +29,25 @@ In addition, considerable type checking is enabled for data-binding expressions.
     <div><button on-tap="_subtractOne">Decrease</button></div>
   </template>
   <script>
-    Polymer({
-      is: 'add-or-subtract',
-      properties: {
-        value: {
-          type: Number,
-          notify: true
-        }
-      },
-      _addOne: function() { this.value++; },
-      _subtractOne: function() { this.value--; }
-    });
+    /**
+     * @polymer
+     * @customElement
+     * @extends {Polymer.Element}
+     */
+    class AddOrSubtractElement extends Polymer.Element {
+      static get is() { return 'add-or-subtract'; }
+      static get properties() {
+        return {
+          value: {
+            type: Number,
+            notify: true
+          }
+        };
+      }
+      _addOne() { this.value++; }
+      _subtractOne() { this.value--; }
+    }
+    customElements.define(AddOrSubtractElement.is, AddOrSubtractElement);
   </script>
 </dom-module>
 <dom-module id="foo-bar">
@@ -49,16 +57,24 @@ In addition, considerable type checking is enabled for data-binding expressions.
     </template>
   </template>
   <script>
-    Polymer({
-      is: 'foo-bar',
-      properties: {
-        numList: {
-          type: Array,
-          value: () => [1, 2, 3, 4];
-        }
+    /**
+     * @polymer
+     * @customElement
+     * @extends {Polymer.Element}
+     */
+    class FooBarElement extends Polymer.Element {
+      static get is() { return 'foo-bar'; }
+      static get properties() {
+        return {
+          numList: {
+            type: Array,
+            value: () => [1, 2, 3, 4]
+          }
+        };
       }
-      _valueChanged: function() {}
-    });
+      _valueChanged() {}
+    }
+    customElements.define(FooBarElement.is, FooBarElement);
   </script>
 </dom-module>
 ```
@@ -72,17 +88,20 @@ In addition, considerable type checking is enabled for data-binding expressions.
     <div><button on-tap="b">Decrease</button></div>
   </template>
   <script>
-    Polymer({
-      is: 'add-or-subtract',
-      properties: {
-        c: {
-          type: Number,
-          notify: true
-        }
-      },
-      a: function() { this.c++; },
-      b: function() { this.c--; }
-    });
+    class A extends Polymer.Element {
+      static get is() { return 'add-or-subtract'; }
+      static get properties() {
+        return {
+          c: {
+            type: Number,
+            notify: true
+          }
+        };
+      }
+      a() { this.c++; }
+      b() { this.c--; }
+    }
+    customElements.define(A.is, A);
   </script>
 </dom-module>
 <dom-module id="foo-bar">
@@ -92,16 +111,19 @@ In addition, considerable type checking is enabled for data-binding expressions.
     </template>
   </template>
   <script>
-    Polymer({
-      is: 'foo-bar',
-      properties: {
-        d: {
-          type: Array,
-          value: () => [1, 2, 3, 4];
-        }
+    class B extends Polymer.Element {
+      static get is() { return 'foo-bar'; }
+      static get properties() {
+        return {
+          d: {
+            type: Array,
+            value: () => [1, 2, 3, 4]
+          }
+        };
       }
-      f: function() {}
-    });
+      f() {}
+    }
+    customElements.define(B.is, B);
   </script>
 </dom-module>
 ```
@@ -109,7 +131,8 @@ In addition, considerable type checking is enabled for data-binding expressions.
 ## Using Polymer 2 Renaming
 
 For Polymer 1, Closure-Compiler blocked renaming of any declared property. With Polymer 2, the compiler now uses
-the standard conventions: quoted properties are not renamed and other properties are.
+the standard conventions: quoted properties are not renamed and other properties are. Declared properties
+with the `reflectToAttribute` or `readOnly` properties will never be renamed.
 
 In addition, this project will rename attributes which map to properties of a custom element.
 
@@ -133,24 +156,12 @@ const gulp = require('gulp');
 const polymerRename = require('polymer-rename');
 
 gulp.task('extract-data-binding-expressions', function() {
-  gulp.src('/src/components/**/*.html') // Usually this will be the vulcanized file - may also need to add .js files
+  gulp.src('/src/components/**/*.html') // Usually this will be the bundled file - may also need to add .js files
       .pipe(polymerRename.extract({
         outputFilename: 'foo-bar.template.js'
       }))
       .pipe(gulp.dest('./build'));
 });
-```
-
-**JS Functions**
-
-```js
-const extractExpressions = require('polymer-rename/lib/extract-expressions/parse-polymer-elements');
-const fs = require('fs');
-
-extractExpressions(fs.readFileSync('/src/components/foo-bar.html', {encoding: 'utf8'}))
-  .then(expressions => {
-    console.log(expressions);
-  });
 ```
 
 ### Example Compilation
@@ -194,54 +205,16 @@ contains indexes into the original template which will now be replaced with thei
 const polymerRename = require('polymer-rename');
 
 gulp.task('update-html-template', function() {
-  gulp.src('./src/components/foo-bar.html') // Usually this will be the vulcanized file
+  gulp.src('./src/components/foo-bar.html') // Usually this will be the bundled file
       .pipe(polymerRename.replace('./dist/foo-bar.template.js'))
       .pipe(gulp.dest('./dist/components'));
 });
 ```
 
-**JS Functions**
-
-```js
-const replaceExpressions = require('polymer-rename/lib/replace-expressions/replace-expressions');
-const fs = require('fs');
-
-let originalTemplate = fs.readFileSync('./src/components/foo-bar.html', {encoding: 'utf8'});
-let renamedExpressions = fs.readFileSync('./dist/foo-bar.template.js', {encoding: 'utf8'});
-
-let updatedTemplate = replaceExpressions(originalTemplate, renamedExpressions);
-console.log(updatedTemplate);
-```
-
 ## Element Type Names
 
-By default, the Polymer pass of Closure-compiler derives the type names from the element tag name. The tag name is
-converted to upper camel case and the string "Element" is appended. So `<foo-bar>` becomes type `FooBarElement`.
-
-However, authors can choose to name their own types by assigning the return value of the `Polymer` function to a
-variable. Example:
-
-```js
-myNamespace.FooBar = Polymer({is: 'foo-bar'});
-```
-
-To support this use case, the `polymerRename.extract()` gulp plugin takes an optional argument which is a lookup
-function. The function takes a single argument of the element tag name and returns the type name. If the function
-returns `undefined`, the default behavior will be used as a fallback.
-
-Any tag name who's attributes contain data-binding expressions will be passed to this function. Standard HTML tags
-and custom elements can both be resolved by this function.
-
-```js
-polymerRename.extract({
-  typeNameLookup: tagName => {
-    if (tagName === 'custom-tag') {
-      return 'myNamespace.CustomTagElement';
-    }
-    return undefined;
-  }
-})
-```
+polymer-rename obtains the type names of elements from polymer-analyzer. Type names for
+elements must be global.
 
 ## Examples
 
@@ -259,27 +232,35 @@ data-binding expressions and create a valid JS file:
     </template>
   </template>
   <script>
-  Polymer({
-    is: "foo-bar",
-    properties: {
-      name: String,
-      employer: String,
-      
-      /** @type {Array<{street: string, city: string, state: string, zip: string}>} */
-      addresses: Array
+  /**
+   * @polymer
+   * @customElement
+   * @extends {Polymer.Element}
+   */
+  class FooBarElement extends Polymer.Element {
+    static get is() { return "foo-bar"; }
+    static get properties() {
+      return {
+        name: String,
+        employer: String,
+        
+        /** @type {Array<{street: string, city: string, state: string, zip: string}>} */
+        addresses: Array
+      };
     }
     
     /**
      * @param {?string} a
      * @return {string}
      */
-    formatName: function(a) { return a || ''; },
+    formatName(a) { return a || ''; },
     
     /** @param {!Event=} evt */
-    nameClicked: function(evt) {
+    nameClicked(evt) {
       console.log(this.name);
     }
-  });
+  }
+  customElements.define(FooBarElement.is, FooBarElement);
   </script>
 </dom-module>
 ```
