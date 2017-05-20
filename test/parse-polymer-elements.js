@@ -44,6 +44,7 @@ describe('parse polymer elements', function() {
 (/** @this {FooBarElement} @suppress {visibility} */ function() {
   polymerRename.identifier(55, 58, this.bar);
 }).call(/** @type {!FooBarElement} */ (document.createElement("foo-bar")));\n`);
+          expect(results.warnings.length).to.be.equal(0);
         });
     });
 
@@ -71,6 +72,7 @@ describe('parse polymer elements', function() {
     this.bar = polymerRename_FooBazElement.dataFoo;
   }
 }).call(/** @type {!FooBarElement} */ (document.createElement("foo-bar")));\n`);
+          expect(results.warnings.length).to.be.equal(0);
         });
     });
 
@@ -89,6 +91,7 @@ describe('parse polymer elements', function() {
   polymerRename.identifier(67, 70, this.foo);
   polymerRename.identifier(73, 79, this.foobar);
 }).call(/** @type {!FooBarElement} */ (document.createElement("foo-bar")));\n`);
+          expect(results.warnings.length).to.be.equal(0);
         });
     });
 
@@ -102,6 +105,7 @@ describe('parse polymer elements', function() {
   this.bar(new Event("event"));
   polymerRename.eventListener(51, 54, this.bar);
 }).call(/** @type {!FooBarElement} */ (document.createElement("foo-bar")));\n`);
+          expect(results.warnings.length).to.be.equal(0);
         });
     });
 
@@ -125,6 +129,7 @@ describe('parse polymer elements', function() {
     polymerRename.attribute(236, 239, polymerRename_foo_bazElement, polymerRename_foo_bazElement.foo);
   }
 }).call(/** @type {!FooBarElement} */ (document.createElement("foo-bar")));\n`);
+          expect(results.warnings.length).to.be.equal(0);
         });
     });
 
@@ -141,6 +146,7 @@ describe('parse polymer elements', function() {
   polymerRename.method(68, 74, this.lookup);
   polymerRename.identifier(76, 82, this.foobar);
 }).call(/** @type {!FooBarElement} */ (document.createElement("foo-bar")));\n`);
+          expect(results.warnings.length).to.be.equal(0);
         });
     });
   });
@@ -157,6 +163,7 @@ describe('parse polymer elements', function() {
   polymerRename.identifier(50, 53, this.bar);
   polymerRename.identifier(58, 61, this.baz);
 }).call(/** @type {!FooBarElement} */ (document.createElement("foo-bar")));\n`);
+          expect(results.warnings.length).to.be.equal(0);
         });
     });
 
@@ -173,6 +180,7 @@ describe('parse polymer elements', function() {
   polymerRename.method(45, 51, this.lookup);
   polymerRename.identifier(66, 72, this.foobar);
 }).call(/** @type {!FooBarElement} */ (document.createElement("foo-bar")));\n`);
+          expect(results.warnings.length).to.be.equal(0);
         });
     });
   });
@@ -193,6 +201,7 @@ describe('parse polymer elements', function() {
     polymerRename.identifier(82, 90, item.foo, item, 'item');
   }
 }).call(/** @type {!FooBarElement} */ (document.createElement("foo-bar")));\n`);
+            expect(results.warnings.length).to.be.equal(0);
           });
     });
 
@@ -212,6 +221,7 @@ describe('parse polymer elements', function() {
     polymerRename.identifier(94, 104, foobar.foo);
   }
 }).call(/** @type {!FooBarElement} */ (document.createElement("foo-bar")));\n`);
+            expect(results.warnings.length).to.be.equal(0);
           });
     });
 
@@ -232,6 +242,7 @@ describe('parse polymer elements', function() {
     polymerRename.identifier(114, 119, count);
   }
 }).call(/** @type {!FooBarElement} */ (document.createElement("foo-bar")));\n`);
+            expect(results.warnings.length).to.be.equal(0);
           });
     });
 
@@ -274,6 +285,7 @@ describe('parse polymer elements', function() {
     }
   }
 }).call(/** @type {!FooBarElement} */ (document.createElement("foo-bar")));\n`);
+          expect(results.warnings.length).to.be.equal(0);
         });
     });
 
@@ -294,6 +306,7 @@ describe('parse polymer elements', function() {
     polymerRename.identifier(97, 105, item.foo, item, 'item');
   }
 }).call(/** @type {!FooBarElement} */ (document.createElement("foo-bar")));\n`);
+            expect(results.warnings.length).to.be.equal(0);
           });
     });
 
@@ -317,6 +330,7 @@ describe('parse polymer elements', function() {
     polymerRename.identifier(111, 119, item.foo, item, 'item');
   }
 }).call(/** @type {!FooBarElement} */ (document.createElement("foo-bar")));\n`);
+            expect(results.warnings.length).to.be.equal(0);
           });
     });
 
@@ -337,6 +351,7 @@ describe('parse polymer elements', function() {
     polymerRename.identifier(98, 106, item.foo, item, 'item');
   }
 }).call(/** @type {!FooBarElement} */ (document.createElement("foo-bar")));\n`);
+            expect(results.warnings.length).to.be.equal(0);
           });
     });
 
@@ -360,6 +375,7 @@ describe('parse polymer elements', function() {
     polymerRename.identifier(112, 120, item.foo, item, 'item');
   }
 }).call(/** @type {!FooBarElement} */ (document.createElement("foo-bar")));\n`);
+            expect(results.warnings.length).to.be.equal(0);
           });
     });
 
@@ -381,6 +397,7 @@ describe('parse polymer elements', function() {
     polymerRename.identifier(116, 126, item.prop1, item, 'item');
   }
 }).call(/** @type {!FooBarElement} */ (document.createElement("foo-bar")));\n`);
+            expect(results.warnings.length).to.be.equal(0);
           });
     });
 
@@ -401,6 +418,7 @@ describe('parse polymer elements', function() {
     polymerRename.identifier(104, 110, foobar);
   }
 }).call(/** @type {!FooBarElement} */ (document.createElement("foo-bar")));\n`);
+            expect(results.warnings.length).to.be.equal(0);
           });
     });
   });
