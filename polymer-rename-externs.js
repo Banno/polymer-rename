@@ -4,8 +4,11 @@
  * @externs
  */
 
-/** @const */
-var polymerRename = {};
+/** @interface */
+function PolymerRename() {} 
+
+/** @param {!Function} fn */
+PolymerRename.prototype.sink = function(fn) {};
 
 /**
  * @param {number} start
@@ -14,7 +17,7 @@ var polymerRename = {};
  * @param {*=} baseObject
  * @param {string=} baseObjectName
  */
-polymerRename.method = function(start, end, identifier, baseObject, baseObjectName) {};
+PolymerRename.prototype.method = function(start, end, identifier, baseObject, baseObjectName) {};
 
 /**
  * @param {number} start
@@ -23,13 +26,13 @@ polymerRename.method = function(start, end, identifier, baseObject, baseObjectNa
  * @param {*=} baseObject
  * @param {string=} baseObjectName
  */
-polymerRename.identifier = function(start, end, identifier, baseObject, baseObjectName) {};
+PolymerRename.prototype.identifier = function(start, end, identifier, baseObject, baseObjectName) {};
 
 /** @param {boolean} filter */
-polymerRename.domRepeatFilter = function(filter) {};
+PolymerRename.prototype.domRepeatFilter = function(filter) {};
 
 /** @param {number} compare */
-polymerRename.domRepeatSort = function(compare) {};
+PolymerRename.prototype.domRepeatSort = function(compare) {};
 
 /**
  * @param {number} start
@@ -38,7 +41,7 @@ polymerRename.domRepeatSort = function(compare) {};
  * @param {*} baseObject
  * @param {string} baseObjectName
  */
-polymerRename.domRepeatObserve = function(start, end, identifier, baseObject, baseObjectName) {};
+PolymerRename.prototype.domRepeatObserve = function(start, end, identifier, baseObject, baseObjectName) {};
 
 /**
  * @param {number} start
@@ -46,11 +49,17 @@ polymerRename.domRepeatObserve = function(start, end, identifier, baseObject, ba
  * @param {Element} customElement
  * @param {*} prop
  */
-polymerRename.attribute = function(start, end, customElement, prop) {};
+PolymerRename.prototype.attribute = function(start, end, customElement, prop) {};
 
 /**
  * @param {number} start
  * @param {number} end
  * @param {EventListener|function(!Event):(boolean|undefined)} listener
  */
-polymerRename.eventListener = function(start, end, listener) {};
+PolymerRename.prototype.eventListener = function(start, end, listener) {};
+
+/**
+ * @const
+ * @type {!PolymerRename}
+ */
+var polymerRename;
