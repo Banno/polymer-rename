@@ -5,21 +5,21 @@ const FindReplacements = require('../lib/replace-expressions/find-replacements')
 describe('find replacements', function() {
   it('identifier', function () {
     let expressions = new FindReplacements(
-        `(function(){polymerRename.identifier(60, 63, this.a);}).call(document.createElement("foo-bar"));`);
+        `(function(){polymerRename.identifier(60, 63, this.a);}).call(polymerRename.createElement("foo-bar"));`);
     expect(expressions.replacements.length).to.be.equal(1);
     expect(expressions.replacements[0].start).to.be.equal(60);
     expect(expressions.replacements[0].end).to.be.equal(63);
     expect(expressions.replacements[0].value).to.be.equal('a');
 
     expressions = new FindReplacements(
-        `(function(){polymerRename.identifier(60, 63, a);}).call(document.createElement("foo-bar"));`);
+        `(function(){polymerRename.identifier(60, 63, a);}).call(polymerRename.createElement("foo-bar"));`);
     expect(expressions.replacements.length).to.be.equal(1);
     expect(expressions.replacements[0].start).to.be.equal(60);
     expect(expressions.replacements[0].end).to.be.equal(63);
     expect(expressions.replacements[0].value).to.be.equal('a');
 
     expressions = new FindReplacements(
-        `(function(){polymerRename.identifier(60, 63, a);}).call(document.createElement("foo-bar"));
+        `(function(){polymerRename.identifier(60, 63, a);}).call(polymerRename.createElement("foo-bar"));
         polymerRename.identifier(90, 93, this.a.b);
         polymerRename.identifier(80, 83, Array.size);
         polymerRename.identifier(70, 73, item);`);
@@ -44,7 +44,7 @@ describe('find replacements', function() {
 
   it('identifier with non-renameable prefix', function () {
     let expressions = new FindReplacements(
-        `(function(){polymerRename.identifier(60, 63, b.a, b, 'item');}).call(document.createElement("foo-bar"));`);
+        `(function(){polymerRename.identifier(60, 63, b.a, b, 'item');}).call(polymerRename.createElement("foo-bar"));`);
     expect(expressions.replacements.length).to.be.equal(1);
     expect(expressions.replacements[0].start).to.be.equal(60);
     expect(expressions.replacements[0].end).to.be.equal(63);
@@ -52,7 +52,7 @@ describe('find replacements', function() {
 
     expressions = new FindReplacements(`(function(){
         polymerRename.identifier(90, 93, b.c, b, 'item');
-      }).call(document.createElement("foo-bar"));`);
+      }).call(polymerRename.createElement("foo-bar"));`);
     expect(expressions.replacements.length).to.be.equal(1);
     expect(expressions.replacements[0].start).to.be.equal(90);
     expect(expressions.replacements[0].end).to.be.equal(93);
@@ -61,14 +61,14 @@ describe('find replacements', function() {
 
   it('method', function () {
     let expressions = new FindReplacements(
-        `(function(){polymerRename.method(60, 63, this.a);}).call(document.createElement("foo-bar"));`);
+        `(function(){polymerRename.method(60, 63, this.a);}).call(polymerRename.createElement("foo-bar"));`);
     expect(expressions.replacements.length).to.be.equal(1);
     expect(expressions.replacements[0].start).to.be.equal(60);
     expect(expressions.replacements[0].end).to.be.equal(63);
     expect(expressions.replacements[0].value).to.be.equal('a');
 
     expressions = new FindReplacements(
-        `(function(){polymerRename.method(60, 63, a);}).call(document.createElement("foo-bar"));
+        `(function(){polymerRename.method(60, 63, a);}).call(polymerRename.createElement("foo-bar"));
         polymerRename.method(90, 93, this.a.b);
         polymerRename.method(80, 83, Array.size);
         polymerRename.method(70, 73, item);`);
@@ -93,7 +93,7 @@ describe('find replacements', function() {
 
   it('method with non-renameable prefix', function () {
     let expressions = new FindReplacements(
-        `(function(){polymerRename.method(60, 63, a.b, a, 'item');}).call(document.createElement("foo-bar"));`);
+        `(function(){polymerRename.method(60, 63, a.b, a, 'item');}).call(polymerRename.createElement("foo-bar"));`);
     expect(expressions.replacements.length).to.be.equal(1);
     expect(expressions.replacements[0].start).to.be.equal(60);
     expect(expressions.replacements[0].end).to.be.equal(63);
@@ -101,13 +101,13 @@ describe('find replacements', function() {
   });
 
   it('event listener', function () {
-    let expressions = new FindReplacements(`(function(){polymerRename.eventListener(60, 63, this.a);}).call(document.createElement("foo-bar"));`);
+    let expressions = new FindReplacements(`(function(){polymerRename.eventListener(60, 63, this.a);}).call(polymerRename.createElement("foo-bar"));`);
     expect(expressions.replacements.length).to.be.equal(1);
     expect(expressions.replacements[0].start).to.be.equal(60);
     expect(expressions.replacements[0].end).to.be.equal(63);
     expect(expressions.replacements[0].value).to.be.equal('a');
 
-    expressions = new FindReplacements(`(function(){polymerRename.eventListener(60, 63, a);}).call(document.createElement("foo-bar"));
+    expressions = new FindReplacements(`(function(){polymerRename.eventListener(60, 63, a);}).call(polymerRename.createElement("foo-bar"));
         polymerRename.eventListener(90, 93, this.a.b)`);
     expect(expressions.replacements.length).to.be.equal(2);
 
@@ -122,7 +122,7 @@ describe('find replacements', function() {
 
   it('unrecognized', function () {
     let expressions = new FindReplacements(
-        `(function(){polymerRename.foobar(60, 63, b.a);}).call(document.createElement("foo-bar"));`);
+        `(function(){polymerRename.foobar(60, 63, b.a);}).call(polymerRename.createElement("foo-bar"));`);
     expect(expressions.replacements.length).to.be.equal(0);
   });
 
@@ -144,7 +144,7 @@ for (let a = 0; a < this.a.length; a++) {
     }
   }
 }
-}).call(document.createElement("foo-bar"))`);
+}).call(polymerRename.createElement("foo-bar"))`);
     expect(expressions.replacements.length).to.be.equal(7);
     let index = -1;
 

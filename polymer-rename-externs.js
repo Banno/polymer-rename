@@ -59,6 +59,12 @@ PolymerRename.prototype.attribute = function(start, end, customElement, prop) {}
 PolymerRename.prototype.eventListener = function(start, end, listener) {};
 
 /**
+ * @param {string} tagName
+ * @return {!Element}
+ */
+PolymerRename.prototype.createElement = function(tagName) {};
+
+/**
  * @const
  * @type {!PolymerRename}
  */

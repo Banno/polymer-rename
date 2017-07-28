@@ -47,7 +47,7 @@ describe('gulp-polymer-rename - extract phase', function() {
   polymerRename.identifier(60, 63, this.bar);
   };
   polymerRename.sink(renameFn);
-  renameFn.call(/** @type {!FooBarElement} */ (document.createElement("foo-bar")));
+  renameFn.call(/** @type {!FooBarElement} */ (polymerRename.createElement("foo-bar")));
 }
 `);
       });

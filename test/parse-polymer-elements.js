@@ -46,7 +46,7 @@ describe('parse polymer elements', function() {
   polymerRename.identifier(55, 58, this.bar);
   };
   polymerRename.sink(renameFn);
-  renameFn.call(/** @type {!FooBarElement} */ (document.createElement("foo-bar")));
+  renameFn.call(/** @type {!FooBarElement} */ (polymerRename.createElement("foo-bar")));
 }\n`);
           expect(results.warnings.length).to.be.equal(0);
         });
@@ -67,18 +67,18 @@ describe('parse polymer elements', function() {
 {
   /** @this {FooBarElement} @suppress {visibility} */ let renameFn = function() {
   {
-    let polymerRename_foo_bazElement = /** @type {!FooBazElement} */ (document.createElement('foo-baz'));
+    let polymerRename_foo_bazElement = /** @type {!FooBazElement} */ (polymerRename.createElement('foo-baz'));
     polymerRename.attribute(197, 205, polymerRename_foo_bazElement, polymerRename_foo_bazElement.dataFoo);
   }
   polymerRename.identifier(209, 212, this.bar);
   {
-    let polymerRename_FooBazElement = /** @type {!FooBazElement} */(document.createElement('foo-baz'));
+    let polymerRename_FooBazElement = /** @type {!FooBazElement} */(polymerRename.createElement('foo-baz'));
     polymerRename_FooBazElement.dataFoo = this.bar;
     this.bar = polymerRename_FooBazElement.dataFoo;
   }
   };
   polymerRename.sink(renameFn);
-  renameFn.call(/** @type {!FooBarElement} */ (document.createElement("foo-bar")));
+  renameFn.call(/** @type {!FooBarElement} */ (polymerRename.createElement("foo-bar")));
 }\n`);
           expect(results.warnings.length).to.be.equal(0);
         });
@@ -101,7 +101,7 @@ describe('parse polymer elements', function() {
   polymerRename.identifier(73, 79, this.foobar);
   };
   polymerRename.sink(renameFn);
-  renameFn.call(/** @type {!FooBarElement} */ (document.createElement("foo-bar")));
+  renameFn.call(/** @type {!FooBarElement} */ (polymerRename.createElement("foo-bar")));
 }\n`);
           expect(results.warnings.length).to.be.equal(0);
         });
@@ -119,7 +119,7 @@ describe('parse polymer elements', function() {
   polymerRename.eventListener(51, 54, this.bar);
   };
   polymerRename.sink(renameFn);
-  renameFn.call(/** @type {!FooBarElement} */ (document.createElement("foo-bar")));
+  renameFn.call(/** @type {!FooBarElement} */ (polymerRename.createElement("foo-bar")));
 }\n`);
           expect(results.warnings.length).to.be.equal(0);
         });
@@ -142,12 +142,12 @@ describe('parse polymer elements', function() {
   this.bar(new CustomEvent("event"));
   polymerRename.eventListener(249, 252, this.bar);
   {
-    let polymerRename_foo_bazElement = /** @type {!FooBazElement} */ (document.createElement('foo-baz'));
+    let polymerRename_foo_bazElement = /** @type {!FooBazElement} */ (polymerRename.createElement('foo-baz'));
     polymerRename.attribute(236, 239, polymerRename_foo_bazElement, polymerRename_foo_bazElement.foo);
   }
   };
   polymerRename.sink(renameFn);
-  renameFn.call(/** @type {!FooBarElement} */ (document.createElement("foo-bar")));
+  renameFn.call(/** @type {!FooBarElement} */ (polymerRename.createElement("foo-bar")));
 }\n`);
           expect(results.warnings.length).to.be.equal(0);
         });
@@ -168,7 +168,7 @@ describe('parse polymer elements', function() {
   polymerRename.identifier(76, 82, this.foobar);
   };
   polymerRename.sink(renameFn);
-  renameFn.call(/** @type {!FooBarElement} */ (document.createElement("foo-bar")));
+  renameFn.call(/** @type {!FooBarElement} */ (polymerRename.createElement("foo-bar")));
 }\n`);
           expect(results.warnings.length).to.be.equal(0);
         });
@@ -189,7 +189,7 @@ describe('parse polymer elements', function() {
   polymerRename.identifier(58, 61, this.baz);
   };
   polymerRename.sink(renameFn);
-  renameFn.call(/** @type {!FooBarElement} */ (document.createElement("foo-bar")));
+  renameFn.call(/** @type {!FooBarElement} */ (polymerRename.createElement("foo-bar")));
 }\n`);
           expect(results.warnings.length).to.be.equal(0);
         });
@@ -210,7 +210,7 @@ describe('parse polymer elements', function() {
   polymerRename.identifier(66, 72, this.foobar);
   };
   polymerRename.sink(renameFn);
-  renameFn.call(/** @type {!FooBarElement} */ (document.createElement("foo-bar")));
+  renameFn.call(/** @type {!FooBarElement} */ (polymerRename.createElement("foo-bar")));
 }\n`);
           expect(results.warnings.length).to.be.equal(0);
         });
@@ -235,7 +235,7 @@ describe('parse polymer elements', function() {
   }
   };
   polymerRename.sink(renameFn);
-  renameFn.call(/** @type {!FooBarElement} */ (document.createElement("foo-bar")));
+  renameFn.call(/** @type {!FooBarElement} */ (polymerRename.createElement("foo-bar")));
 }\n`);
             expect(results.warnings.length).to.be.equal(0);
           });
@@ -259,7 +259,7 @@ describe('parse polymer elements', function() {
   }
   };
   polymerRename.sink(renameFn);
-  renameFn.call(/** @type {!FooBarElement} */ (document.createElement("foo-bar")));
+  renameFn.call(/** @type {!FooBarElement} */ (polymerRename.createElement("foo-bar")));
 }\n`);
             expect(results.warnings.length).to.be.equal(0);
           });
@@ -284,7 +284,7 @@ describe('parse polymer elements', function() {
   }
   };
   polymerRename.sink(renameFn);
-  renameFn.call(/** @type {!FooBarElement} */ (document.createElement("foo-bar")));
+  renameFn.call(/** @type {!FooBarElement} */ (polymerRename.createElement("foo-bar")));
 }\n`);
             expect(results.warnings.length).to.be.equal(0);
           });
@@ -331,7 +331,7 @@ describe('parse polymer elements', function() {
   }
   };
   polymerRename.sink(renameFn);
-  renameFn.call(/** @type {!FooBarElement} */ (document.createElement("foo-bar")));
+  renameFn.call(/** @type {!FooBarElement} */ (polymerRename.createElement("foo-bar")));
 }\n`);
           expect(results.warnings.length).to.be.equal(0);
         });
@@ -356,7 +356,7 @@ describe('parse polymer elements', function() {
   }
   };
   polymerRename.sink(renameFn);
-  renameFn.call(/** @type {!FooBarElement} */ (document.createElement("foo-bar")));
+  renameFn.call(/** @type {!FooBarElement} */ (polymerRename.createElement("foo-bar")));
 }\n`);
             expect(results.warnings.length).to.be.equal(0);
           });
@@ -384,7 +384,7 @@ describe('parse polymer elements', function() {
   }
   };
   polymerRename.sink(renameFn);
-  renameFn.call(/** @type {!FooBarElement} */ (document.createElement("foo-bar")));
+  renameFn.call(/** @type {!FooBarElement} */ (polymerRename.createElement("foo-bar")));
 }\n`);
             expect(results.warnings.length).to.be.equal(0);
           });
@@ -409,7 +409,7 @@ describe('parse polymer elements', function() {
   }
   };
   polymerRename.sink(renameFn);
-  renameFn.call(/** @type {!FooBarElement} */ (document.createElement("foo-bar")));
+  renameFn.call(/** @type {!FooBarElement} */ (polymerRename.createElement("foo-bar")));
 }\n`);
             expect(results.warnings.length).to.be.equal(0);
           });
@@ -437,7 +437,7 @@ describe('parse polymer elements', function() {
   }
   };
   polymerRename.sink(renameFn);
-  renameFn.call(/** @type {!FooBarElement} */ (document.createElement("foo-bar")));
+  renameFn.call(/** @type {!FooBarElement} */ (polymerRename.createElement("foo-bar")));
 }\n`);
             expect(results.warnings.length).to.be.equal(0);
           });
@@ -463,7 +463,7 @@ describe('parse polymer elements', function() {
   }
   };
   polymerRename.sink(renameFn);
-  renameFn.call(/** @type {!FooBarElement} */ (document.createElement("foo-bar")));
+  renameFn.call(/** @type {!FooBarElement} */ (polymerRename.createElement("foo-bar")));
 }\n`);
             expect(results.warnings.length).to.be.equal(0);
           });
@@ -488,7 +488,7 @@ describe('parse polymer elements', function() {
   }
   };
   polymerRename.sink(renameFn);
-  renameFn.call(/** @type {!FooBarElement} */ (document.createElement("foo-bar")));
+  renameFn.call(/** @type {!FooBarElement} */ (polymerRename.createElement("foo-bar")));
 }\n`);
             expect(results.warnings.length).to.be.equal(0);
           });
