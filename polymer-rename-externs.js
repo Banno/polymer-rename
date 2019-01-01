@@ -11,22 +11,33 @@ function PolymerRename() {}
 PolymerRename.prototype.sink = function(fn) {};
 
 /**
+ * @template T
+ * @param {!Array<T>|null|undefined} arr
+ * @return {!Array<T>}
+ */
+PolymerRename.prototype.restrictNull = function(arr) {};
+
+/**
+ * @param {string} url
+ * @param {string} placeholder
  * @param {number} start
  * @param {number} end
  * @param {!Function} identifier
  * @param {*=} baseObject
  * @param {string=} baseObjectName
  */
-PolymerRename.prototype.method = function(start, end, identifier, baseObject, baseObjectName) {};
+PolymerRename.prototype.method = function(url, placeholder, start, end, identifier, baseObject, baseObjectName) {};
 
 /**
+ * @param {string} url
+ * @param {string} placeholder
  * @param {number} start
  * @param {number} end
  * @param {*} identifier
  * @param {*=} baseObject
  * @param {string=} baseObjectName
  */
-PolymerRename.prototype.identifier = function(start, end, identifier, baseObject, baseObjectName) {};
+PolymerRename.prototype.identifier = function(url, placeholder, start, end, identifier, baseObject, baseObjectName) {};
 
 /** @param {boolean} filter */
 PolymerRename.prototype.domRepeatFilter = function(filter) {};
@@ -35,28 +46,34 @@ PolymerRename.prototype.domRepeatFilter = function(filter) {};
 PolymerRename.prototype.domRepeatSort = function(compare) {};
 
 /**
+ * @param {string} url
+ * @param {string} placeholder
  * @param {number} start
  * @param {number} end
  * @param {*} identifier
  * @param {*} baseObject
  * @param {string} baseObjectName
  */
-PolymerRename.prototype.domRepeatObserve = function(start, end, identifier, baseObject, baseObjectName) {};
+PolymerRename.prototype.domRepeatObserve = function(url, placeholder, start, end, identifier, baseObject, baseObjectName) {};
 
 /**
+ * @param {string} url
+ * @param {string} placeholder
  * @param {number} start
  * @param {number} end
  * @param {Element} customElement
  * @param {*} prop
  */
-PolymerRename.prototype.attribute = function(start, end, customElement, prop) {};
+PolymerRename.prototype.attribute = function(url, placeholder, start, end, customElement, prop) {};
 
 /**
+ * @param {string} url
+ * @param {string} placeholder
  * @param {number} start
  * @param {number} end
  * @param {EventListener|function(!Event):(boolean|undefined)} listener
  */
-PolymerRename.prototype.eventListener = function(start, end, listener) {};
+PolymerRename.prototype.eventListener = function(url, placeholder, start, end, listener) {};
 
 /**
  * @param {string} tagName
