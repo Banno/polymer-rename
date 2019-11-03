@@ -30,8 +30,10 @@
   ],
   "dependencies": {
     "acorn": "5.0.1",
+    "esprima-walk": "^0.1.0",
     "gulp-util": "^3.0.7",
     "polymer-analyzer": "3.x",
+    "source-map": "^0.7.3",
     "tree-walk": "github:chadkillingsworth/tree-walk#add-walk",
     "vscode-uri": "1.x"
   },

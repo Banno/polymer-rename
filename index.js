@@ -1,9 +1,9 @@
 'use strict';
 
 const extractExpressions = require('./lib/gulp-polymer-rename-extract');
-const findReplacements = require('./lib/gulp-polymer-rename-replace');
+const removeExpressions = require('./lib/gulp-polymer-rename-remove');
 
 module.exports = {
   extract: extractExpressions,
-  replace: findReplacements
+  remove: removeExpressions
 };
