@@ -1,6 +1,6 @@
 {
   "name": "polymer-rename",
-  "version": "3.0.3",
+  "version": "3.0.4",
   "description": "Rename polymer template databinding expressions and event functions with closure-compiler",
   "main": "index.js",
   "scripts": {
