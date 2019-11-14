@@ -30,6 +30,7 @@
   ],
   "dependencies": {
     "acorn": "5.0.1",
+    "escodegen": "^1.12.0",
     "esprima-walk": "^0.1.0",
     "gulp-util": "^3.0.7",
     "polymer-analyzer": "3.x",
