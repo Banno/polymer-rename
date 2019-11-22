@@ -81,8 +81,13 @@ PolymerRename.prototype.eventListener = function(url, placeholder, start, end, l
  */
 PolymerRename.prototype.createElement = function(tagName) {};
 
+/** @param {!function()} callback */
+PolymerRename.prototype.typeCheckStatements = function(callback) {};
+
 /**
  * @const
  * @type {!PolymerRename}
  */
 var polymerRename;
+
+
