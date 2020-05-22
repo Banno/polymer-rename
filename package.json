@@ -29,7 +29,7 @@
     "tree-walk"
   ],
   "dependencies": {
-    "acorn": "5.0.1",
+    "acorn": "5.7.4",
     "escodegen": "^1.12.0",
     "esprima": "4.x",
     "esprima-walk": "^0.1.0",
