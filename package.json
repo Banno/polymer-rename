@@ -41,7 +41,7 @@
     "vscode-uri": "1.x"
   },
   "devDependencies": {
-    "eslint": "^3.19.0",
+    "eslint": "7.x",
     "eslint-config-google": "^0.7.1"
   }
 }
