@@ -35,7 +35,7 @@
     "esprima-walk": "^0.1.0",
     "gulp-util": "^3.0.7",
     "polymer-analyzer": "3.x",
-    "source-map": "^0.7.3",
+    "string-replace-source-map": "^1.0.1",
     "tree-walk": "github:chadkillingsworth/tree-walk#add-walk",
     "vscode-uri": "1.x"
   },
