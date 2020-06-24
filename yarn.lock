@@ -218,7 +218,7 @@ acorn@5.7.x:
   resolved "https://registry.yarnpkg.com/acorn/-/acorn-5.7.4.tgz#3e8d8a9947d0599a1796d10225d7432f4a4acf5e"
   integrity sha512-1D++VG7BhrtvQpNbBzovKNc1FLGGEE/oGe7b9xJm/RFHMBeUaUGpluV9RLjZa47YFdPcDAenEYuq9pQPcMdLJg==
 
-acorn@^7.2.0:
+acorn@7.x, acorn@^7.2.0:
   version "7.3.1"
   resolved "https://registry.yarnpkg.com/acorn/-/acorn-7.3.1.tgz#85010754db53c3fbaf3b9ea3e083aa5c5d147ffd"
   integrity sha512-tLc0wSnatxAQHVHUapaHdz72pi9KUyHjq5KyHjGg9Y8Ifdc79pTh2XvI6I1/chZbnM7QtNKzh66ooDogPZSleA==
@@ -1223,11 +1223,12 @@ stable@^0.1.6:
   resolved "https://registry.yarnpkg.com/stable/-/stable-0.1.8.tgz#836eb3c8382fe2936feaf544631017ce7d47a3cf"
   integrity sha512-ji9qxRnOVfcuLDySj9qzhGSEFVobyt1kIOSkj1qZzYLzq7Tos/oUUWvotUPQLlrsidqsK6tBH89Bc9kL5zHA6w==
 
-string-replace-source-map@^1.0.1:
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/string-replace-source-map/-/string-replace-source-map-1.0.1.tgz#43d9d3be03f7d311b8793d74081bf2ccf17d7d8d"
-  integrity sha512-OAyQVsFypmv3ojKZm/dT26+TBBwGMzUj8gh/ExNQMNpzoyKGEYm4uR25SpkccOlwyeKbpcSH/wUd0H0PqXLufQ==
+string-replace-source-map@1.x:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/string-replace-source-map/-/string-replace-source-map-1.1.0.tgz#678ac7142e39669b1668f65658f8383a038718c9"
+  integrity sha512-3poMz/pLoswi97L74wHkvXj+XykrYrD35qYldNXMYczOroeD4KLOQpAisf47Vk792JrnSJG6xR+Bl1cVwCkjoQ==
   dependencies:
+    acorn "7.x"
     source-map "0.7.x"
 
 string-width@^3.0.0:
