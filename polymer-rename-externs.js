@@ -5,7 +5,7 @@
  */
 
 /** @interface */
-function PolymerRename() {} 
+function PolymerRename() {}
 
 /** @param {!Function} fn */
 PolymerRename.prototype.sink = function(fn) {};
@@ -83,6 +83,12 @@ PolymerRename.prototype.createElement = function(tagName) {};
 
 /** @param {!function()} callback */
 PolymerRename.prototype.typeCheckStatements = function(callback) {};
+
+/**
+ * @param {string} input
+ * @return {!HTMLTemplateElement}
+ */
+PolymerRename.prototype.createTemplateFromString = function(input) {};
 
 /**
  * @const
