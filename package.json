@@ -29,8 +29,8 @@
     "tree-walk"
   ],
   "dependencies": {
-    "acorn": "8.0.4",
-    "acorn-walk": "^8.0.0",
+    "acorn": "8.x",
+    "acorn-walk": "^8.x",
     "escodegen": "1.x",
     "fancy-log": "^1.3.3",
     "plugin-error": "^1.0.1",
