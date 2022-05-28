@@ -1225,10 +1225,10 @@ stable@^0.1.6:
   resolved "https://registry.yarnpkg.com/stable/-/stable-0.1.8.tgz#836eb3c8382fe2936feaf544631017ce7d47a3cf"
   integrity sha512-ji9qxRnOVfcuLDySj9qzhGSEFVobyt1kIOSkj1qZzYLzq7Tos/oUUWvotUPQLlrsidqsK6tBH89Bc9kL5zHA6w==
 
-string-replace-source-map@1.x:
-  version "1.2.0"
-  resolved "https://registry.yarnpkg.com/string-replace-source-map/-/string-replace-source-map-1.2.0.tgz#3df5885057cd980c49e554ae37d8b806713fe7ef"
-  integrity sha512-sfQAfa6eDIp+bdys8dXIek774KlppdSqKDXjuSEXhp6Ku81FeLZQQcqyisO08i89Rsnm4pqCd8coeG6MX13Evg==
+string-replace-source-map@1.2.1:
+  version "1.2.1"
+  resolved "https://registry.yarnpkg.com/string-replace-source-map/-/string-replace-source-map-1.2.1.tgz#4ada58fd032f5defe9e29ab3fe8dab1ddd7a59b9"
+  integrity sha512-74nygmCvZzyDrz13Rf3dVLTsJWxtT/qw0dHBGrocYVuT+/iBzuMOPdpsuHgJeqH/dy16US57VBe5xEz2LnLd/Q==
   dependencies:
     acorn "8.x"
     source-map "0.8.0-beta.0 || 0.8.x"
