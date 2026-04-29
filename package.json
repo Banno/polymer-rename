@@ -42,5 +42,6 @@
   "devDependencies": {
     "eslint": "7.x",
     "eslint-config-google": "^0.7.1"
-  }
+  },
+  "packageManager": "yarn@1.22.22"
 }
